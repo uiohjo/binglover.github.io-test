@@ -1,4 +1,229 @@
---Plumet Tournament --
-![download](https://github.com/user-attachments/assets/c8e87879-1db8-489a-bd9e-272c1d5133e9)
-Get the highest score and win $50 dollars!
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Plummet Tournament - Play Now!</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            text-align: center;
+            position: relative;
+            animation: gradientAnimation 10s ease infinite;
+            background: linear-gradient(135deg, #1d2671, #c33764);
+            background-size: 400% 400%; /* Increase size for smooth transition */
+        }
+
+        /* Background Gradient Animation */
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        header {
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin: 0;
+            opacity: 0; /* Start invisible for animation */
+            transform: translateY(-50px); /* Start above the original position */
+            animation: titleReveal 1s forwards; /* Animation for title reveal */
+        }
+
+        @keyframes titleReveal {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            50% {
+                transform: translateY(20px) scale(1.1);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                text-shadow: 0 0 5px rgba(255, 204, 0, 0.5), 0 0 10px rgba(255, 204, 0, 0.5);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(255, 204, 0, 1), 0 0 30px rgba(255, 204, 0, 1);
+            }
+            100% {
+                text-shadow: 0 0 5px rgba(255, 204, 0, 0.5), 0 0 10px rgba(255, 204, 0, 0.5);
+            }
+        }
+
+        .gold-title {
+            background: linear-gradient(90deg, #ffcc00, #ffd700, #ffcc00); /* Gold gradient */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 1.5s infinite; /* Shimmer effect */
+        }
+
+        .rarity-text {
+            font-size: 1.5em;
+            color: #ffcc00; /* Gold color */
+            margin-top: 10px;
+            opacity: 0; /* Start invisible for animation */
+            transform: translateY(10px); /* Start slightly below the original position */
+            animation: rarityReveal 1s forwards; /* Animation for rarity reveal */
+            display: none; /* Start hidden */
+        }
+
+        @keyframes rarityReveal {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        p {
+            font-size: 1.5em;
+            color: #eee;
+            margin: 10px 0 20px;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 960px;
+            height: auto;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s;
+            z-index: 1;
+        }
+
+        .game-container:hover {
+            transform: scale(1.03);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .game-container object {
+            width: 100%;
+            height: 100%;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #ddd;
+            position: relative;
+            z-index: 1;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .rarity-text {
+                font-size: 1.2em;
+            }
+
+            p {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+    <!-- Ruffle Script for Flash Emulation -->
+    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+</head>
+<body>
+
+    <header>
+        <h1 id="title">Plummet Tournament</h1>
+        <div id="rarity" class="rarity-text">SSR</div> <!-- Rarity text -->
+        <p>Aim for the highest score and win $50!</p>
+    </header>
+
+    <div class="game-container" id="game-container">
+        <!-- Embed Flash game using Ruffle -->
+        <object id="game-object" data="Plumet2.swf" type="application/x-shockwave-flash">
+            <param name="movie" value="Plumet2.swf" />
+            <embed src="Plumet2.swf" type="application/x-shockwave-flash"></embed>
+        </object>
+    </div>
+
+    <footer>
+        <p>Plummet Tournament | Hosted by Jared and Luke</p>
+        <p>Prize provided by Jared's brother</p>
+    </footer>
+
+    <script>
+        // Randomly change title color on load
+        const titleElement = document.getElementById('title');
+        const rarityElement = document.getElementById('rarity');
+        const randomChance = Math.floor(Math.random() * 50); // Random number between 0 and 49
+
+        // Trigger reveal animation
+        function revealTitle(isGold) {
+            if (isGold) {
+                titleElement.classList.add('gold-title'); // Apply gold title class
+                titleElement.innerText = 'GOLDEN Plummet Tournament'; // Change text for gold title
+                rarityElement.style.display = 'block'; // Show rarity
+                rarityElement.style.opacity = 1; // Make rarity visible
+                rarityElement.style.transform = 'translateY(0)'; // Move to original position
+            } else {
+                rarityElement.style.display = 'none'; // Hide rarity
+                rarityElement.style.opacity = 0; // Keep rarity invisible
+                rarityElement.style.transform = 'translateY(10px)'; // Keep below original position
+            }
+            titleElement.style.opacity = 1; // Make title visible
+            titleElement.style.transform = 'translateY(0)'; // Move to original position
+        }
+
+        // Decide if the title should be gold
+        if (randomChance === 0) { // 1 in 50 chance
+            setTimeout(() => revealTitle(true), 1000); // Show gold title after 1 second
+        } else {
+            setTimeout(() => revealTitle(false), 1000); // Show normal title after 1 second
+        }
+
+        function resizeGame() {
+            const container = document.getElementById('game-container');
+            const width = container.offsetWidth;
+            const height = (width / 16) * 9;  // Maintain 16:9 aspect ratio
+            container.style.height = height + 'px';
+        }
+
+        window.addEventListener('resize', resizeGame);
+        window.addEventListener('load', () => {
+            resizeGame();
+        });
+    </script>
+</body>
+</html>
