@@ -1,2 +1,3 @@
---PLACE HOLDER--
-When I figure this out I'll write a real description.
+        --Plumet Tournament --
+Get the highest score and win $50 dollars!
+![download](https://github.com/user-attachments/assets/c8e87879-1db8-489a-bd9e-272c1d5133e9)
