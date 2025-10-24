@@ -162,6 +162,46 @@
     </style>
     <!-- Ruffle Script for Flash Emulation -->
     <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+  <meta charset="utf-8" />
+  <title>Icon password prompt (quick)</title>
+  <style>
+    .icon-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      font-size: 22px;
+      color: #333;
+    }
+    .icon-btn:focus { outline: 2px solid #7aa; }
+  </style>
+</head>
+<body>
+  <!-- Accessible button with inline SVG lock icon -->
+  <button class="icon-btn" id="lockBtn" aria-label="Enter password">
+    <!-- simple lock SVG -->
+    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+      <path fill="currentColor" d="M12 17a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6-7h-1V8a5 5 0 10-10 0v2H6a2 2 0 00-2 2v7a2 2 0 002 2h12a2 2 0 002-2v-7a2 2 0 00-2-2zM8 8a4 4 0 118 0v2H8V8z"/>
+    </svg>
+  </button>
+
+<script>
+document.getElementById('lockBtn').addEventListener('click', () => {
+  const entered = prompt('Please enter the password:');
+  // WARNING: this comparison is client-side and can be easily inspected/changed by users
+  const CORRECT = 'letmein'; // demo only
+  if (entered === null) {
+    // user cancelled
+    return;
+  }
+  if (entered === CORRECT) {
+    alert('Access granted!');
+    // do whatever you want on success (e.g., reveal content)
+  } else {
+    alert('Wrong password.');
+  }
+});
+</script>
 </head>
 <body>
 
