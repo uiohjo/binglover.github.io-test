@@ -1,228 +1,299 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Plumet Tournament</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Plumet Tournament</title>
+  <meta name="description" content="Plumet Tournament – play, compete, and climb the leaderboard." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Ccircle cx='64' cy='64' r='62' fill='%23c33764'/%3E%3Cpath d='M32 48h64L80 96H48z' fill='%23fff' opacity='.9'/%3E%3C/svg%3E" />
 
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            overflow: hidden;
-            text-align: center;
-            position: relative;
-            animation: gradientAnimation 10s ease infinite;
-            background: linear-gradient(135deg, #1d2671, #c33764);
-            background-size: 400% 400%; /* Increase size for smooth transition */
-        }
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
 
-        /* Background Gradient Animation */
-        @keyframes gradientAnimation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+  <style>
+    :root {
+      --bg-1: #101322;
+      --bg-2: #1d2671;
+      --accent: #c33764;
+      --text: #ffffff;
+      --muted: #c8c8d0;
+      --border: rgba(255,255,255,0.12);
+      --card: rgba(255,255,255,0.06);
+      --gold-1: #ffcc00;
+      --gold-2: #ffd700;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --shadow-lg: 0 16px 50px rgba(0,0,0,.5);
+    }
 
-        header {
-            margin-bottom: 30px;
-            position: relative;
-            z-index: 1;
-        }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(135deg, var(--bg-2), var(--accent));
+      background-size: 300% 300%;
+      animation: gradientAnimation 16s ease infinite;
+      overflow-x: hidden;
+    }
 
-        h1 {
-            font-size: 3.5em;
-            margin: 0;
-            opacity: 0; /* Start invisible for animation */
-            transform: translateY(-50px); /* Start above the original position */
-            animation: titleReveal 1s forwards; /* Animation for title reveal */
-        }
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-        @keyframes titleReveal {
-            0% {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            50% {
-                transform: translateY(20px) scale(1.1);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
+    .site { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
 
-        @keyframes shimmer {
-            0% {
-                text-shadow: 0 0 5px rgba(255, 204, 0, 0.5), 0 0 10px rgba(255, 204, 0, 0.5);
-            }
-            50% {
-                text-shadow: 0 0 20px rgba(255, 204, 0, 1), 0 0 30px rgba(255, 204, 0, 1);
-            }
-            100% {
-                text-shadow: 0 0 5px rgba(255, 204, 0, 0.5), 0 0 10px rgba(255, 204, 0, 0.5);
-            }
-        }
+    header[role="banner"] {
+      text-align: center;
+      margin-top: 60px;
+      animation: fadeIn 1.5s ease forwards;
+    }
 
-        .gold-title {
-            background: linear-gradient(90deg, #ffcc00, #ffd700, #ffcc00); /* Gold gradient */
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shimmer 1.5s infinite; /* Shimmer effect */
-        }
+    .title {
+      font-size: clamp(2rem, 3.2vw + 1rem, 3.25rem);
+      margin: 0;
+      letter-spacing: .4px;
+      opacity: 0;
+      transform: translateY(-50px) rotateX(40deg) scale(0.9);
+      animation: titleSwoop 1.5s ease-out forwards;
+      animation-delay: 0.3s;
+    }
 
-        .rarity-text {
-            font-size: 1.5em;
-            color: #ffcc00; /* Gold color */
-            margin-top: 10px;
-            opacity: 0; /* Start invisible for animation */
-            transform: translateY(10px); /* Start slightly below the original position */
-            animation: rarityReveal 1s forwards; /* Animation for rarity reveal */
-            display: none; /* Start hidden */
-        }
+    .title--gold {
+      background: linear-gradient(90deg, var(--gold-1), var(--gold-2), var(--gold-1));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 18px rgba(255, 204, 0, .25);
+      animation: shimmer 2s infinite ease-in-out;
+    }
 
-        @keyframes rarityReveal {
-            0% {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    .subtle {
+      color: var(--muted);
+      margin: 0;
+      font-size: clamp(1rem, 1vw + .7rem, 1.2rem);
+      opacity: 0;
+      animation: fadeIn 2s ease forwards;
+      animation-delay: 1.2s;
+    }
 
-        p {
-            font-size: 1.5em;
-            color: #eee;
-            margin: 10px 0 20px;
-        }
+    .rarity {
+      display: none;
+      color: var(--gold-1);
+      font-weight: 600;
+      margin-top: 8px;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+      animation-delay: 1.5s;
+    }
 
-        .game-container {
-            width: 100%;
-            max-width: 960px;
-            height: auto;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
-            border-radius: 15px;
-            background-color: rgba(100, 143, 98, 0.1);
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s;
-            z-index: 1;
-        }
+    main {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1.35fr .9fr;
+      align-items: start;
+      width: min(1100px, 92vw);
+      margin-top: 40px;
+      opacity: 0;
+      animation: fadeUp 1.5s ease forwards;
+      animation-delay: 1.8s;
+    }
 
-        .game-container:hover {
-            transform: scale(1.03);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
-        }
+    @media (max-width: 980px) {
+      main { grid-template-columns: 1fr; }
+    }
 
-        .game-container object {
-            width: 100%;
-            height: 100%;
-        }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-        footer {
-            margin-top: 30px;
-            font-size: 0.9em;
-            color: #ddd;
-            position: relative;
-            z-index: 1;
-        }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+    }
 
-        footer p {
-            margin: 5px 0;
-        }
+    .card__body { padding: 16px; }
+    .card__header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2.5em;
-            }
+    .card__title {
+      margin: 0;
+      font-size: 1.05rem;
+      letter-spacing: .2px;
+    }
 
-            .rarity-text {
-                font-size: 1.2em;
-            }
+    .game-frame {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border-radius: var(--radius);
+      overflow: hidden;
+      animation: fadeIn 1.5s ease forwards;
+    }
 
-            p {
-                font-size: 1.2em;
-            }
-        }
-    </style>
-    <!-- Ruffle Script for Flash Emulation -->
-    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+    .game-frame object, .game-frame embed {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
 
-    <header>
-        <h1 id="title">Plumet Tournament</h1>
-        <div id="rarity" class="rarity-text">YOU GOT THE GOLD SKIN!</div> <!-- Rarity text -->
-        <p>Aim for the highest score!</p>
+    table { width: 100%; border-collapse: collapse; }
+    thead th { text-align: left; font-weight: 600; color: var(--muted); padding: 10px 12px; }
+    tbody td { padding: 12px; border-top: 1px solid var(--border); }
+    tbody tr { transition: background 0.3s ease; }
+    tbody tr:hover { background: rgba(255,255,255,.04); }
+    .rank { width: 64px; text-align: right; color: var(--muted); }
+    .score { text-align: right; font-variant-numeric: tabular-nums; }
+
+    .slotting { filter: blur(0.6px) contrast(1.1); }
+    .slot-complete { text-shadow: 0 0 10px rgba(255,255,255,.25); }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      margin: 40px 0;
+      opacity: 0;
+      animation: fadeIn 2s ease forwards;
+      animation-delay: 2.2s;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes shimmer { 0% { text-shadow: 0 0 10px rgba(255, 204, 0, 0.5); } 50% { text-shadow: 0 0 25px rgba(255, 204, 0, 1); } 100% { text-shadow: 0 0 10px rgba(255, 204, 0, 0.5); } }
+    @keyframes titleSwoop { 0% { opacity: 0; transform: translateY(-50px) rotateX(40deg) scale(0.9); } 60% { opacity: 1; transform: translateY(20px) rotateX(0deg) scale(1.05); } 100% { transform: translateY(0) rotateX(0deg) scale(1); opacity: 1; } }
+  </style>
+
+  <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+</head>
+<body>
+  <div class="site">
+    <header role="banner">
+      <h1 id="title" class="title" aria-live="polite">Plumet Tournament</h1>
+      <p class="subtle">Aim for the highest score! Compete fairly, flex responsibly.</p>
+      <p id="rarity" class="rarity" role="status" aria-live="assertive">You rolled the GOLD variant. Nice.</p>
     </header>
 
-    <div class="game-container" id="game-container">
-        <!-- Embed Flash game using Ruffle -->
-        <object id="game-object" data="Plumet2.swf" type="application/x-shockwave-flash">
-            <param name="movie" value="Plumet2.swf" />
-            <embed src="Plumet2.swf" type="application/x-shockwave-flash"></embed>
-        </object>
-    </div>
+    <main role="main">
+      <section class="card">
+        <div class="card__header">
+          <h2 class="card__title">Play</h2>
+        </div>
+        <div class="card__body">
+          <div class="game-frame" id="game-frame" aria-label="Plumet Game Container">
+            <object id="game-object" data="Plumet2.swf" type="application/x-shockwave-flash">
+              <param name="movie" value="Plumet2.swf" />
+              <param name="allowFullScreen" value="true" />
+              <param name="allowScriptAccess" value="always" />
+              <embed src="Plumet2.swf" type="application/x-shockwave-flash"></embed>
+            </object>
+            <noscript>
+              <p>JavaScript is required to run the Flash emulator. Please enable JavaScript.</p>
+            </noscript>
+          </div>
+        </div>
+      </section>
+
+      <aside class="card" aria-labelledby="lb-title">
+        <div class="card__header">
+          <h2 id="lb-title" class="card__title">Leaderboard</h2>
+        </div>
+        <div class="card__body">
+          <table role="table" aria-describedby="lb-caption">
+            <thead>
+              <tr>
+                <th class="rank">#</th>
+                <th>Player</th>
+                <th class="score">Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="rank">1</td><td>Jared Aarre</td><td class="score">1,904</td></tr>
+              <tr><td class="rank">2</td><td>Luke Loiselle</td><td class="score">1,901</td></tr>
+              <tr><td class="rank">3</td><td id="player-oliver" style="cursor:pointer" title="Try your luck!">Oliver Grogg</td><td class="score">1,769</td></tr>
+              <tr><td class="rank">4</td><td>Ethan Roisland</td><td class="score">1,717</td></tr>
+              <tr><td class="rank">5</td><td>Nick Gillard</td><td class="score">1,707</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </aside>
+    </main>
 
     <footer>
-        <p>Plumet Tournament | Hosted by Luke</p>
-        <p> Leaderboard<br>1. Jared Aarre 1904<br>2. Luke Loiselle 1901<br>3. Oliver Grogg 1769<br>4. Ethan Roisland 1717<br>5. Nick Gillard 1707
-        </p>
+      Plumet Tournament · Hosted by Luke
     </footer>
+  </div>
 
-    <script>
-        // Randomly change title color on load
-        const titleElement = document.getElementById('title');
-        const rarityElement = document.getElementById('rarity');
-        const randomChance = Math.floor(Math.random() * 50); // Random number between 0 and 49
+  <script>
+    'use strict';
 
-        // Trigger reveal animation
-        function revealTitle(isGold) {
-            if (isGold) {
-                titleElement.classList.add('gold-title'); // Apply gold title class
-                titleElement.innerText = 'GOLDEN Plumet Tournament'; // Change text for gold title
-                rarityElement.style.display = 'block'; // Show rarity
-                rarityElement.style.opacity = 1; // Make rarity visible
-                rarityElement.style.transform = 'translateY(0)'; // Move to original position
-            } else {
-                rarityElement.style.display = 'none'; // Hide rarity
-                rarityElement.style.opacity = 0; // Keep rarity invisible
-                rarityElement.style.transform = 'translateY(10px)'; // Keep below original position
-            }
-            titleElement.style.opacity = 1; // Make title visible
-            titleElement.style.transform = 'translateY(0)'; // Move to original position
-        }
+    const el = (id) => document.getElementById(id);
 
-        // Decide if the title should be gold
-        if (randomChance === 0) { // 1 in 50 chance
-            setTimeout(() => revealTitle(true), 1000); // Show gold title after 1 second
-        } else {
-            setTimeout(() => revealTitle(false), 1000); // Show normal title after 1 second
-        }
+    function setGoldState(isGold) {
+      const title = el('title');
+      const rarity = el('rarity');
+      if (!title || !rarity) return;
+      if (isGold) {
+        title.classList.add('title--gold');
+        title.textContent = 'GOLDEN Plumet Tournament';
+        rarity.style.display = 'block';
+      } else {
+        title.classList.remove('title--gold');
+        title.textContent = 'Plumet Tournament';
+        rarity.style.display = 'none';
+      }
+    }
 
-        function resizeGame() {
-            const container = document.getElementById('game-container');
-            const width = container.offsetWidth;
-            const height = (width / 16) * 9;  // Maintain 16:9 aspect ratio
-            container.style.height = height + 'px';
-        }
+    function spinNameOnce(target, finalText) {
+      if (!target || target.dataset.spun === 'true') return;
+      const pool = ['Olivi~r', 'Oliver', 'Ol1ver', '0liver', 'O-L-I-V-E-R', 'Oliverr', 'O.G.', 'Oll—', 'Olive?', 'Oli..', 'Oliver'];
+      const duration = 1200;
+      const interval = 70;
+      let i = 0;
+      target.classList.add('slotting');
+      const timer = setInterval(() => {
+        target.textContent = pool[i++ % pool.length];
+      }, interval);
+      setTimeout(() => {
+        clearInterval(timer);
+        target.textContent = finalText;
+        target.classList.remove('slotting');
+        target.classList.add('slot-complete');
+        target.dataset.spun = 'true';
+        target.setAttribute('aria-label', finalText);
+      }, duration);
+    }
 
-        window.addEventListener('resize', resizeGame);
-        window.addEventListener('load', () => {
-            resizeGame();
+    window.addEventListener('DOMContentLoaded', () => {
+      const isGold = Math.floor(Math.random() * 50) === 0;
+      setGoldState(isGold);
+
+      const oliver = document.getElementById('player-oliver');
+      oliver?.addEventListener('click', () => spinNameOnce(oliver, 'Ollie G'));
+      if (oliver) {
+        oliver.setAttribute('tabindex', '0');
+        oliver.setAttribute('role', 'button');
+        oliver.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            spinNameOnce(oliver, 'Ollie G');
+          }
         });
-    </script>
+      }
+    });
+  </script>
 </body>
 </html>
