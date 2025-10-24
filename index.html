@@ -237,7 +237,86 @@
       </form>
     </div>
   </div>
+<title>Six-digit Password Panel Demo</title>
+<style>
+:root{--bg:#0f1724;--panel:#0b1220;--accent:#7c3aed;--muted:#94a3b8;--glass: rgba(255,255,255,0.03)}
+*{box-sizing:border-box}
+body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#071129 0%, #071833 100%);color:#e6eef8;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px}
 
+
+.icon-btn{background:var(--accent);border:0;border-radius:10px;padding:12px;display:inline-grid;place-items:center;width:56px;height:56px;cursor:pointer;box-shadow:0 6px 18px rgba(20,20,60,0.6);transition:transform .12s ease}
+.icon-btn:active{transform:translateY(1px) scale(.995)}
+.icon-btn svg{width:26px;height:26px;display:block}
+
+
+.backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;padding:24px}
+.backdrop.show{display:flex}
+.panel{width:min(460px,96vw);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:20px;box-shadow:0 10px 40px rgba(2,6,23,0.7);border:1px solid rgba(255,255,255,0.03)}
+.panel h2{margin:0 0 8px;font-size:20px}
+.panel p{margin:0 0 16px;color:var(--muted);font-size:14px}
+
+
+.pin-input{display:flex;gap:8px;justify-content:center;margin:14px 0}
+.pin-input input{width:44px;height:56px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit;font-size:22px;text-align:center;outline:none}
+.controls{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+.btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;color:inherit;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:transparent}
+.error{color:#ffb4b4;font-size:13px;text-align:center;margin-top:8px;min-height:18px}
+
+
+@media (max-width:420px){.pin-input input{width:40px;height:48px;font-size:20px}}
+</style>
+</head>
+<body>
+<div style="text-align:center;max-width:680px">
+<h1 style="margin-bottom:8px">Demo: Icon that opens a 6-digit password panel</h1>
+<p style="color:var(--muted);margin-bottom:16px">Click the purple icon to open the panel. The code below is keyboard- and screen-reader-friendly.</p>
+
+
+<button id="openBtn" class="icon-btn" aria-haspopup="dialog" aria-controls="passwordPanel" title="Open password panel">
+<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+<path d="M12 15a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" fill="white" opacity="0.95" />
+<rect x="4" y="10" width="16" height="10" rx="2" fill="white" opacity="0.12" />
+<path d="M7 10V8a5 5 0 0 1 10 0v2" stroke="white" stroke-opacity="0.9" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</button>
+</div>
+
+
+<div id="backdrop" class="backdrop" role="presentation">
+<div id="passwordPanel" class="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle">
+<h2 id="panelTitle">Enter six-digit password</h2>
+<p id="panelDesc">Please type the six-digit numeric password. Use the keyboard or your device's number pad.</p>
+
+
+<form id="pinForm" autocomplete="off" onsubmit="return false;">
+<div class="pin-input" aria-hidden="false">
+<input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 1" class="pin-digit" />
+<input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 2" class="pin-digit" />
+<input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 3" class="pin-digit" />
+<input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 4" class="pin-digit" />
+<input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 5" class="pin-digit" />
+<input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 6" class="pin-digit" />
+</div>
+
+
+<div class="error" id="error" aria-live="polite"></div>
+
+
+<div class="controls">
+<button type="button" id="cancelBtn" class="btn">Cancel</button>
+<button type="button" id="submitBtn" class="btn primary">Submit</button>
+</div>
+</form>
+</div>
+</div>
+
+
+<script>
+const openBtn = document.getElementById('openBtn');
+const backdrop = document.getElementById('backdrop');
+const panel = document.getElementById('passwordPanel');
+const cancelBtn = document.getElementById('cancelBtn');
   <script>
     // Elements
     const openBtn = document.getElementById('openBtn');
