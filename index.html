@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -162,53 +161,211 @@
     </style>
     <!-- Ruffle Script for Flash Emulation -->
     <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
-  <meta charset="utf-8" />
-  <title>Icon password prompt (quick)</title>
-  <style>
-    .icon-btn {
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      padding: 6px;
-      font-size: 22px;
-      color: #333;
-    }
-    .icon-btn:focus { outline: 2px solid #7aa; }
-  </style>
-</head>
-<body>
-  <!-- Accessible button with inline SVG lock icon -->
-  <button class="icon-btn" id="lockBtn" aria-label="Enter password">
-    <!-- simple lock SVG -->
-    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-      <path fill="currentColor" d="M12 17a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6-7h-1V8a5 5 0 10-10 0v2H6a2 2 0 00-2 2v7a2 2 0 002 2h12a2 2 0 002-2v-7a2 2 0 00-2-2zM8 8a4 4 0 118 0v2H8V8z"/>
-    </svg>
-  </button>
-
-<script>
-document.getElementById('lockBtn').addEventListener('click', () => {
-  const entered = prompt('Please enter the password:');
-  // WARNING: this comparison is client-side and can be easily inspected/changed by users
-  const CORRECT = 'letmein'; // demo only
-  if (entered === null) {
-    // user cancelled
-    return;
-  }
-  if (entered === CORRECT) {
-    alert('Access granted!');
-    // do whatever you want on success (e.g., reveal content)
-  } else {
-    alert('Wrong password.');
-  }
-});
-</script>
-</head>
-<body>
 
     <header>
         <h1 id="title">Plumet Tournament</h1>
         <div id="rarity" class="rarity-text">YOU GOT THE GOLD SKIN!</div> <!-- Rarity text -->
         <p>Aim for the highest score!</p>
+          <title>Six-digit Password Panel Demo</title>
+  <style>
+    :root{--bg:#0f1724;--panel:#0b1220;--accent:#7c3aed;--muted:#94a3b8;--glass: rgba(255,255,255,0.03)}
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#071129 0%, #071833 100%);color:#e6eef8;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px}
+
+    /* Icon button */
+    .icon-btn{background:var(--accent);border:0;border-radius:10px;padding:12px;display:inline-grid;place-items:center;width:56px;height:56px;cursor:pointer;box-shadow:0 6px 18px rgba(20,20,60,0.6);transition:transform .12s ease}
+    .icon-btn:active{transform:translateY(1px) scale(.995)}
+    .icon-btn svg{width:26px;height:26px;display:block}
+
+    /* Panel / modal */
+    .backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;padding:24px}
+    .backdrop.show{display:flex}
+    .panel{width:min(460px,96vw);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:20px;box-shadow:0 10px 40px rgba(2,6,23,0.7);border:1px solid rgba(255,255,255,0.03)}
+    .panel h2{margin:0 0 8px;font-size:20px}
+    .panel p{margin:0 0 16px;color:var(--muted);font-size:14px}
+
+    .pin-input{display:flex;gap:8px;justify-content:center;margin:14px 0}
+    .pin-input input{width:44px;height:56px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit;font-size:22px;text-align:center;outline:none}
+    .controls{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+    .btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;color:inherit;cursor:pointer}
+    .btn.primary{background:var(--accent);border-color:transparent}
+    .error{color:#ffb4b4;font-size:13px;text-align:center;margin-top:8px;min-height:18px}
+
+    /* small screens: stack */
+    @media (max-width:420px){.pin-input input{width:40px;height:48px;font-size:20px}}
+  </style>
+</head>
+<body>
+  <div style="text-align:center;max-width:680px">
+    <h1 style="margin-bottom:8px">Demo: Icon that opens a 6-digit password panel</h1>
+    <p style="color:var(--muted);margin-bottom:16px">Click the purple icon to open the panel. The code below is keyboard- and screen-reader-friendly.</p>
+
+    <!-- Icon button -->
+    <button id="openBtn" class="icon-btn" aria-haspopup="dialog" aria-controls="passwordPanel" title="Open password panel">
+      <!-- lock icon -->
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 15a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" fill="white" opacity="0.95" />
+        <rect x="4" y="10" width="16" height="10" rx="2" fill="white" opacity="0.12" />
+        <path d="M7 10V8a5 5 0 0 1 10 0v2" stroke="white" stroke-opacity="0.9" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Backdrop + Panel -->
+  <div id="backdrop" class="backdrop" role="presentation">
+    <div id="passwordPanel" class="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle">
+      <h2 id="panelTitle">Enter six-digit password</h2>
+      <p id="panelDesc">Please type the six-digit numeric password. Use the keyboard or your device's number pad.</p>
+
+      <!-- We use six inputs to make digit-by-digit entry easy and accessible -->
+      <form id="pinForm" autocomplete="off" onsubmit="return false;">
+        <div class="pin-input" aria-hidden="false">
+          <input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 1" class="pin-digit" />
+          <input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 2" class="pin-digit" />
+          <input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 3" class="pin-digit" />
+          <input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 4" class="pin-digit" />
+          <input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 5" class="pin-digit" />
+          <input inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 6" class="pin-digit" />
+        </div>
+
+        <div class="error" id="error" aria-live="polite"></div>
+
+        <div class="controls">
+          <button type="button" id="cancelBtn" class="btn">Cancel</button>
+          <button type="button" id="submitBtn" class="btn primary">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Elements
+    const openBtn = document.getElementById('openBtn');
+    const backdrop = document.getElementById('backdrop');
+    const panel = document.getElementById('passwordPanel');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const digits = Array.from(document.querySelectorAll('.pin-digit'));
+    const errorEl = document.getElementById('error');
+
+    // Open panel
+    openBtn.addEventListener('click', () => {
+      backdrop.classList.add('show');
+      // clear inputs
+      digits.forEach(i => i.value = '');
+      errorEl.textContent = '';
+      // focus first digit
+      setTimeout(() => digits[0].focus(), 50);
+      // trap focus (simple)
+      document.addEventListener('keydown', handleKeyDown);
+    });
+
+    function closePanel(){
+      backdrop.classList.remove('show');
+      openBtn.focus();
+      document.removeEventListener('keydown', handleKeyDown);
+    }
+
+    cancelBtn.addEventListener('click', closePanel);
+
+    // Click outside to close
+    backdrop.addEventListener('mousedown', (e) => {
+      if(e.target === backdrop) closePanel();
+    });
+
+    // Keyboard handling for digits: auto-advance, backspace, paste support
+    digits.forEach((input, idx) => {
+      input.addEventListener('input', (e) => {
+        const val = e.target.value.replace(/[^0-9]/g, '');
+        e.target.value = val;
+        if(val && idx < digits.length - 1) digits[idx+1].focus();
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if(e.key === 'Backspace' && !e.target.value && idx > 0){
+          digits[idx-1].focus();
+        }
+        if(e.key === 'Enter') {
+          attemptSubmit();
+        }
+        // prevent non-digit keys (allow arrows/tab)
+        if(e.key.length === 1 && /[^0-9]/.test(e.key)){
+          e.preventDefault();
+        }
+      });
+
+      // support paste of 6-digit string
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
+        for(let i=0;i<digits.length;i++) digits[i].value = text[i] || '';
+        // focus next empty or last
+        const firstEmpty = digits.find(d => !d.value);
+        (firstEmpty || digits[digits.length-1]).focus();
+      });
+    });
+
+    // Submit
+    submitBtn.addEventListener('click', attemptSubmit);
+
+    function handleKeyDown(e){
+      if(e.key === 'Escape') closePanel();
+      // keep focus inside panel
+      if(e.key === 'Tab' && backdrop.classList.contains('show')){
+        const focusables = [...panel.querySelectorAll('button, input')];
+        const idx = focusables.indexOf(document.activeElement);
+        if(e.shiftKey && idx === 0){ focusables[focusables.length-1].focus(); e.preventDefault(); }
+        if(!e.shiftKey && idx === focusables.length-1){ focusables[0].focus(); e.preventDefault(); }
+      }
+    }
+
+    function attemptSubmit(){
+      const value = digits.map(d => d.value).join('');
+      if(value.length !== 6){
+        errorEl.textContent = 'Please enter all six digits.';
+        // shake animation (quick CSS-free approach)
+        panel.animate([{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:200,iterations:1});
+        return;
+      }
+
+      // At this point `value` contains the 6-digit password the user entered.
+      // --- TODO: Replace the following with your real password-checking logic. ---
+      // Example: call a function `checkPassword(value)` you will implement later that returns true/false.
+
+      // Placeholder: we simply show success and close. Replace as needed.
+      // Example: if(checkPassword(value)) { /* success */ } else { /* error */ }
+
+      // For demo show console and close
+      console.log('Entered password:', value);
+      // Clear and close after a small delay so user sees any visual confirmation if you add one
+      setTimeout(closePanel, 150);
+    }
+
+    // Expose a function for other scripts to set the real password checker.
+    // You can replace `window.checkPassword` with your server call or local check.
+    window.checkPassword = async function(pin){
+      // Example: compare to a hard-coded password (DO NOT store secrets in client code for production)
+      // return pin === '123456';
+      // Or, do an authenticated POST to your server and return the validation result.
+      throw new Error('No checkPassword implementation provided. Replace window.checkPassword with your validation logic.');
+    };
+
+    // If you want submit to call the provided checkPassword and show a friendly error:
+    async function attemptSubmitWithValidation(){
+      const value = digits.map(d => d.value).join('');
+      if(value.length !== 6){ errorEl.textContent = 'Please enter all six digits.'; return; }
+      errorEl.textContent = 'Checking...';
+      try{
+        const ok = await window.checkPassword(value);
+        if(ok){ errorEl.textContent = 'Password accepted.'; setTimeout(closePanel, 350); }
+        else{ errorEl.textContent = 'Incorrect password.'; }
+      }catch(err){ errorEl.textContent = 'Validation not configured.'; console.error(err); }
+    }
+
+    // If you prefer the submit button to use the sample validated flow, comment/uncomment below:
+    //submitBtn.addEventListener('click', attemptSubmitWithValidation);
+
+  </script>
     </header>
 
     <div class="game-container" id="game-container">
