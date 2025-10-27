@@ -177,7 +177,78 @@
       animation: fadeIn 2s ease forwards;
       animation-delay: 2.2s;
     }
+    
+/* Floating button */
+#password-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--gold-1);
+  color: #000;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  z-index: 1000;
+}
 
+#password-btn:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Hidden panel overlay */
+#password-panel {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+/* Panel box */
+#password-panel .panel-content {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  width: 300px;
+}
+
+#password-panel input {
+  width: 80%;
+  padding: 8px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.1);
+  color: var(--text);
+  text-align: center;
+}
+
+#password-panel button {
+  margin-top: 12px;
+  background: var(--gold-1);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+#password-message {
+  margin-top: 10px;
+  color: var(--muted);
+}
+    
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes shimmer { 0% { text-shadow: 0 0 10px rgba(255, 204, 0, 0.5); } 50% { text-shadow: 0 0 25px rgba(255, 204, 0, 1); } 100% { text-shadow: 0 0 10px rgba(255, 204, 0, 0.5); } }
@@ -301,6 +372,48 @@
         });
       }
     });
+    
+    // --- Password panel logic ---
+const btn = document.getElementById('password-btn');
+const panel = document.getElementById('password-panel');
+const submit = document.getElementById('password-submit');
+const input = document.getElementById('password-input');
+const msg = document.getElementById('password-message');
+
+btn.addEventListener('click', () => {
+  panel.style.display = 'flex';
+  input.focus();
+});
+
+panel.addEventListener('click', (e) => {
+  if (e.target === panel) panel.style.display = 'none'; // click outside to close
+});
+
+submit.addEventListener('click', () => {
+  const entered = input.value.trim();
+  if (entered === '902197') {
+    msg.textContent = '✅ Access granted!';
+    msg.style.color = 'lime';
+    setTimeout(() => panel.style.display = 'none', 1000);
+  } else {
+    msg.textContent = '❌ Incorrect password.';
+    msg.style.color = 'red';
+  }
+});
+
   </script>
+
+  <!-- Floating Password Button -->
+<button id="password-btn" aria-label="Open password panel">🔒</button>
+
+<!-- Hidden Password Panel -->
+<div id="password-panel">
+  <div class="panel-content">
+    <h3>Enter Password</h3>
+    <input type="password" id="password-input" placeholder="6-digit code" maxlength="6" />
+    <button id="password-submit">Submit</button>
+    <p id="password-message"></p>
+  </div>
+</div>
 </body>
 </html>
