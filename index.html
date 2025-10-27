@@ -372,35 +372,38 @@
         });
       }
     });
-    
+   
     // --- Password panel logic ---
-const btn = document.getElementById('password-btn');
-const panel = document.getElementById('password-panel');
-const submit = document.getElementById('password-submit');
-const input = document.getElementById('password-input');
-const msg = document.getElementById('password-message');
+window.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('password-btn');
+  const panel = document.getElementById('password-panel');
+  const submit = document.getElementById('password-submit');
+  const input = document.getElementById('password-input');
+  const msg = document.getElementById('password-message');
 
-btn.addEventListener('click', () => {
-  panel.style.display = 'flex';
-  input.focus();
+  if (!btn || !panel) return; // safety check
+
+  btn.addEventListener('click', () => {
+    panel.style.display = 'flex';
+    input.focus();
+  });
+
+  panel.addEventListener('click', (e) => {
+    if (e.target === panel) panel.style.display = 'none'; // click outside to close
+  });
+
+  submit.addEventListener('click', () => {
+    const entered = input.value.trim();
+    if (entered === '902197') {
+      msg.textContent = '✅ Access granted!';
+      msg.style.color = 'lime';
+      setTimeout(() => panel.style.display = 'none', 1000);
+    } else {
+      msg.textContent = '❌ Incorrect password.';
+      msg.style.color = 'red';
+    }
+  });
 });
-
-panel.addEventListener('click', (e) => {
-  if (e.target === panel) panel.style.display = 'none'; // click outside to close
-});
-
-submit.addEventListener('click', () => {
-  const entered = input.value.trim();
-  if (entered === '902197') {
-    msg.textContent = '✅ Access granted!';
-    msg.style.color = 'lime';
-    setTimeout(() => panel.style.display = 'none', 1000);
-  } else {
-    msg.textContent = '❌ Incorrect password.';
-    msg.style.color = 'red';
-  }
-});
-
   </script>
 
   <!-- Floating Password Button -->
