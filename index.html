@@ -428,55 +428,53 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  function launchConfetti() {
-    // Simple confetti animation using canvas
-    const confettiCanvas = document.createElement('canvas');
-    confettiCanvas.style.position = 'fixed';
-    confettiCanvas.style.top = 0;
-    confettiCanvas.style.left = 0;
-    confettiCanvas.style.width = '100%';
-    confettiCanvas.style.height = '100%';
-    confettiCanvas.style.pointerEvents = 'none';
-    confettiCanvas.style.zIndex = 2000;
-    document.body.appendChild(confettiCanvas);
-    const ctx = confettiCanvas.getContext('2d');
+function launchConfetti() {
+  const confettiCanvas = document.createElement('canvas');
+  confettiCanvas.style.position = 'fixed';
+  confettiCanvas.style.top = 0;
+  confettiCanvas.style.left = 0;
+  confettiCanvas.style.width = '100%';
+  confettiCanvas.style.height = '100%';
+  confettiCanvas.style.pointerEvents = 'none';
+  confettiCanvas.style.zIndex = 2000;
+  document.body.appendChild(confettiCanvas);
+  const ctx = confettiCanvas.getContext('2d');
 
-    const confetti = Array.from({ length: 150 }).map(() => ({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * -50,
-      r: Math.random() * 6 + 2,
-      d: Math.random() * 0.5 + 0.5,
+  const confetti = [];
+  const numParticles = 150;
+
+  // 🎉 Spawn confetti from both sides
+  for (let i = 0; i < numParticles; i++) {
+    const fromLeft = Math.random() < 0.5;
+    confetti.push({
+      x: fromLeft ? -10 : window.innerWidth + 10,
+      y: Math.random() * window.innerHeight * 0.8,
+      r: Math.random() * 6 + 3,
       color: `hsl(${Math.random() * 360}, 100%, 60%)`,
-      tilt: Math.random() * 10 - 5
-    }));
-
-    function draw() {
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-      confetti.forEach(p => {
-        ctx.beginPath();
-        ctx.fillStyle = p.color;
-        ctx.fillRect(p.x, p.y, p.r, p.r);
-      });
-      update();
-    }
-
-    function update() {
-      confetti.forEach(p => {
-        p.y += p.d * 4;
-        p.x += Math.sin(p.tilt / 2);
-        p.tilt += 0.5;
-      });
-    }
-
-    let frame = 0;
-    function animate() {
-      draw();
-      frame++;
-      if (frame < 200) requestAnimationFrame(animate);
-      else document.body.removeChild(confettiCanvas);
-    }
-    animate();
+      tilt: Math.random() * 10 - 5,
+      vx: fromLeft ? Math.random() * 5 + 4 : -(Math.random() * 5 + 4),
+      vy: Math.random() * -1 + 0.5
+    });
   }
+
+  function draw() {
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    confetti.forEach(p => {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.tilt * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r);
+      ctx.restore();
+    });
+    update();
+  }
+
+  function update() {
+    confetti.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.tilt += 2;
 });
   </script>
 
