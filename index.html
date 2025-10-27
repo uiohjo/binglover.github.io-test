@@ -213,7 +213,8 @@
 }
 
 /* Panel box */
-#password-panel .panel-content {
+#password-panel .panel-content { 
+  position: relative;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -247,6 +248,23 @@
 #password-message {
   margin-top: 10px;
   color: var(--muted);
+}
+   
+    /* Close button */
+#close-panel {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+#close-panel:hover {
+  color: var(--gold-1);
 }
     
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -373,15 +391,16 @@
       }
     });
    
-    // --- Password panel logic ---
+ // --- Password panel logic ---
 window.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('password-btn');
   const panel = document.getElementById('password-panel');
+  const closeBtn = document.getElementById('close-panel');
   const submit = document.getElementById('password-submit');
   const input = document.getElementById('password-input');
   const msg = document.getElementById('password-message');
 
-  if (!btn || !panel) return; // safety check
+  if (!btn || !panel) return;
 
   btn.addEventListener('click', () => {
     panel.style.display = 'flex';
@@ -389,7 +408,11 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   panel.addEventListener('click', (e) => {
-    if (e.target === panel) panel.style.display = 'none'; // click outside to close
+    if (e.target === panel) panel.style.display = 'none';
+  });
+
+  closeBtn.addEventListener('click', () => {
+    panel.style.display = 'none';
   });
 
   submit.addEventListener('click', () => {
@@ -397,26 +420,78 @@ window.addEventListener('DOMContentLoaded', () => {
     if (entered === '902197') {
       msg.textContent = '✅ Access granted!';
       msg.style.color = 'lime';
-      setTimeout(() => panel.style.display = 'none', 1000);
+      launchConfetti();
+      setTimeout(() => panel.style.display = 'none', 2000);
     } else {
       msg.textContent = '❌ Incorrect password.';
       msg.style.color = 'red';
     }
   });
+
+  function launchConfetti() {
+    // Simple confetti animation using canvas
+    const confettiCanvas = document.createElement('canvas');
+    confettiCanvas.style.position = 'fixed';
+    confettiCanvas.style.top = 0;
+    confettiCanvas.style.left = 0;
+    confettiCanvas.style.width = '100%';
+    confettiCanvas.style.height = '100%';
+    confettiCanvas.style.pointerEvents = 'none';
+    confettiCanvas.style.zIndex = 2000;
+    document.body.appendChild(confettiCanvas);
+    const ctx = confettiCanvas.getContext('2d');
+
+    const confetti = Array.from({ length: 150 }).map(() => ({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * -50,
+      r: Math.random() * 6 + 2,
+      d: Math.random() * 0.5 + 0.5,
+      color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+      tilt: Math.random() * 10 - 5
+    }));
+
+    function draw() {
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      confetti.forEach(p => {
+        ctx.beginPath();
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, p.r, p.r);
+      });
+      update();
+    }
+
+    function update() {
+      confetti.forEach(p => {
+        p.y += p.d * 4;
+        p.x += Math.sin(p.tilt / 2);
+        p.tilt += 0.5;
+      });
+    }
+
+    let frame = 0;
+    function animate() {
+      draw();
+      frame++;
+      if (frame < 200) requestAnimationFrame(animate);
+      else document.body.removeChild(confettiCanvas);
+    }
+    animate();
+  }
 });
   </script>
 
   <!-- Floating Password Button -->
 <button id="password-btn" aria-label="Open password panel">🔒</button>
 
-<!-- Hidden Password Panel -->
 <div id="password-panel">
   <div class="panel-content">
+    <button id="close-panel" aria-label="Close panel">✖</button>
     <h3>Enter Password</h3>
     <input type="password" id="password-input" placeholder="6-digit code" maxlength="6" />
     <button id="password-submit">Submit</button>
     <p id="password-message"></p>
   </div>
 </div>
+  
 </body>
 </html>
