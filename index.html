@@ -391,41 +391,42 @@
       }
     });
    
- // --- Password panel logic ---
-window.addEventListener('DOMContentLoaded', () => {
-  const btn = document.getElementById('password-btn');
-  const panel = document.getElementById('password-panel');
-  const closeBtn = document.getElementById('close-panel');
-  const submit = document.getElementById('password-submit');
-  const input = document.getElementById('password-input');
-  const msg = document.getElementById('password-message');
-
-  if (!btn || !panel) return;
-
-  btn.addEventListener('click', () => {
-    panel.style.display = 'flex';
-    input.focus();
-  });
-
-  panel.addEventListener('click', (e) => {
-    if (e.target === panel) panel.style.display = 'none';
-  });
-
-  closeBtn.addEventListener('click', () => {
+ if (entered === '902197') {
+  msg.textContent = '✅ Access granted!';
+  msg.style.color = 'lime';
+  setTimeout(() => {
     panel.style.display = 'none';
-  });
-
-  submit.addEventListener('click', () => {
-    const entered = input.value.trim();
-    if (entered === '902197') {
-      msg.textContent = '✅ Access granted!';
-      msg.style.color = 'lime';
-      launchConfetti();
-      setTimeout(() => panel.style.display = 'none', 2000);
-    } else {
-      msg.textContent = '❌ Incorrect password.';
-      msg.style.color = 'red';
+    // open new blank tab
+    const newPage = window.open('about:blank', '_blank');
+    if (newPage) {
+      newPage.document.write(`
+        <html>
+          <head>
+            <title>The Icon Loves All</title>
+            <style>
+              body {
+                background: black;
+                color: white;
+                font-family: 'Poppins', sans-serif;
+                text-align: center;
+                padding-top: 100px;
+                font-size: 2rem;
+                letter-spacing: 2px;
+              }
+            </style>
+          </head>
+          <body>
+            THE ICON LOVES ALL
+          </body>
+        </html>
+      `);
+      newPage.document.close();
     }
+  }, 800);
+} else {
+  msg.textContent = '❌ Incorrect password.';
+  msg.style.color = 'red';
+}
   });
 
 function launchConfetti() {
