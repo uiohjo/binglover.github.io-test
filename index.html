@@ -136,25 +136,26 @@
       font-size: 1.05rem;
       letter-spacing: .2px;
     }
+    
+.game-frame {
+  width: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+  animation: fadeIn 1.5s ease forwards;
 
-    .game-frame {
-      width: 100%;
-      aspect-ratio: 4/3; 
-      border-radius: var(--radius);
-      overflow: hidden;
-      animation: fadeIn 1.5s ease forwards;
-    }
-
-    .game-frame object, .game-frame embed {
-      width: 800px;
-      height: 450px;
-      display: block;
-    }
- 
-    /* 👇 Add these lines to center the game */
+  /* ✅ Center the content */
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.game-frame object,
+.game-frame embed {
+  /* ✅ Make the game responsive and centered */
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  display: block;
 }
     
     table { width: 100%; border-collapse: collapse; }
