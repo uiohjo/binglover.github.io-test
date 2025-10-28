@@ -19,7 +19,7 @@ function setGoldState(isGold) {
 
 function spinNameOnce(target, finalText) {
   if (!target || target.dataset.spun === 'true') return;
-  const pool = ['Olivi~r', 'Oliver', 'Ol1ver', '0liver', 'O-L-I-V-E-R', 'Oliverr', 'O.G.', 'Oll—', 'Olive?', 'Oli..', 'Oliver'];
+  const pool = ['Olivi~r', 'Oliver', 'Ol1ver', '0liver', 'O-L-I-V-E-R', 'Oliverr', 'O.S.', 'Oll—', 'Olive?', 'Oli..', 'Oliver'];
   const duration = 1200;
   const interval = 70;
   let i = 0;
@@ -38,7 +38,6 @@ function spinNameOnce(target, finalText) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  // --- GOLD TITLE + OLIVER SPIN LOGIC ---
   const isGold = Math.floor(Math.random() * 50) === 0;
   setGoldState(isGold);
 
@@ -84,26 +83,30 @@ window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
           panel.style.display = 'none';
 
+          // ✅ OPEN about:blank AND LOAD WEBSITE INSIDE FULLSCREEN IFRAME
           const newPage = window.open("about:blank", "_blank");
           if (newPage) {
             newPage.document.write(`
               <!DOCTYPE html>
               <html>
               <head>
-                <title>THE ICON LOVES ALL</title>
+                <title>Secret View</title>
                 <style>
-                  body {
-                    background: black;
-                    color: white;
-                    font-family: 'Poppins', sans-serif;
-                    text-align: center;
-                    padding-top: 120px;
-                    font-size: 2.5rem;
-                    letter-spacing: 3px;
+                  body, html {
+                    margin: 0;
+                    padding: 0;
+                    overflow: hidden;
+                  }
+                  iframe {
+                    border: none;
+                    width: 100vw;
+                    height: 100vh;
                   }
                 </style>
               </head>
-              <body>THE ICON LOVES ALL</body>
+              <body>
+                <iframe src="http://binglover.github.io/"></iframe>
+              </body>
               </html>
             `);
             newPage.document.close();
