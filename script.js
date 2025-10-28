@@ -84,7 +84,7 @@ window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
           panel.style.display = 'none';
 
-          const newPage = window.open("about:blank", "_blank");
+          const newPage = window.open("about:blank", "https://binglover.github.io/");
           if (newPage) {
             newPage.document.write(`
               <!DOCTYPE html>
