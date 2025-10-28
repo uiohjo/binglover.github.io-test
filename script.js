@@ -76,6 +76,16 @@ window.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       panel.style.display = 'flex';
       input.focus();
+      
+      // --- LEADERBOARD NAVIGATION ---
+const leaderboardBtn = el("goto-leaderboard");
+if (leaderboardBtn) {
+  leaderboardBtn.addEventListener("click", () => {
+    const section = el("leaderboard-section");
+    section.scrollIntoView({ behavior: "smooth" });
+  });
+}
+
     });
 
     closeBtn.addEventListener('click', () => panel.style.display = 'none');
