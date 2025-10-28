@@ -322,6 +322,9 @@
               <tr><td class="rank">3</td><td id="player-oliver" style="cursor:pointer" title="Try your luck!">Oliver Grogg</td><td class="score">1,769</td></tr>
               <tr><td class="rank">4</td><td>Ethan Roisland</td><td class="score">1,717</td></tr>
               <tr><td class="rank">5</td><td>Nick Gillard</td><td class="score">1,707</td></tr>
+              <tr><td class="rank">6</td><td>Junior</td><td class="score">1,248</td></tr>
+              <tr><td class="rank">7</td><td>Max Marson</td><td class="score">1,231</td></tr>
+              <tr><td class="rank">8</td><td>Adrian Trujillo</td><td class="score">893</td></tr>
             </tbody>
           </table>
         </div>
@@ -373,6 +376,26 @@
       }, duration);
     }
 
+        function spinNameOnce(target, finalText) {
+      if (!target || target.dataset.spun === 'true') return;
+      const pool = ['Junio~r', 'JuniOr', 'Jun10r', 'Jr', 'U-I-L-S-E-S', 'Juniorrrrrrrrrrrrrr', 'Big Bean', '207lbs', 'June?', 'Jun...', 'Junior'];
+      const duration = 1200;
+      const interval = 70;
+      let i = 0;
+      target.classList.add('slotting');
+      const timer = setInterval(() => {
+        target.textContent = pool[i++ % pool.length];
+      }, interval);
+      setTimeout(() => {
+        clearInterval(timer);
+        target.textContent = finalText;
+        target.classList.remove('slotting');
+        target.classList.add('slot-complete');
+        target.dataset.spun = 'true';
+        target.setAttribute('aria-label', finalText);
+      }, duration);
+    }
+    
     window.addEventListener('DOMContentLoaded', () => {
       const isGold = Math.floor(Math.random() * 50) === 0;
       setGoldState(isGold);
@@ -390,7 +413,21 @@
         });
       }
     });
-   
+
+      const junior = document.getElementById('player-junior');
+      oliver?.addEventListener('click', () => spinNameOnce(oliver, 'ILLEGAL'));
+      if (junior) {
+        junior.setAttribute('tabindex', '0');
+        junior.setAttribute('role', 'button');
+        junior.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            spinNameOnce(junior, 'ILLEGAL');
+          }
+        });
+      }
+    });
+    
  // --- Password panel logic ---
 window.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('password-btn');
