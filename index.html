@@ -340,210 +340,183 @@
   </div>
 
   <script>
-    'use strict';
+<script>
+'use strict';
 
-    const el = (id) => document.getElementById(id);
+const el = (id) => document.getElementById(id);
 
-    function setGoldState(isGold) {
-      const title = el('title');
-      const rarity = el('rarity');
-      if (!title || !rarity) return;
-      if (isGold) {
-        title.classList.add('title--gold');
-        title.textContent = 'GOLDEN Plumet Tournament';
-        rarity.style.display = 'block';
-      } else {
-        title.classList.remove('title--gold');
-        title.textContent = 'Plumet Tournament';
-        rarity.style.display = 'none';
-      }
-    }
+function setGoldState(isGold) {
+  const title = el('title');
+  const rarity = el('rarity');
+  if (!title || !rarity) return;
+  if (isGold) {
+    title.classList.add('title--gold');
+    title.textContent = 'GOLDEN Plumet Tournament';
+    rarity.style.display = 'block';
+  } else {
+    title.classList.remove('title--gold');
+    title.textContent = 'Plumet Tournament';
+    rarity.style.display = 'none';
+  }
+}
 
-    function spinNameOnce(target, finalText) {
-      if (!target || target.dataset.spun === 'true') return;
-      const pool = ['Olivi~r', 'Oliver', 'Ol1ver', '0liver', 'O-L-I-V-E-R', 'Oliverr', 'O.G.', 'Oll—', 'Olive?', 'Oli..', 'Oliver'];
-      const duration = 1200;
-      const interval = 70;
-      let i = 0;
-      target.classList.add('slotting');
-      const timer = setInterval(() => {
-        target.textContent = pool[i++ % pool.length];
-      }, interval);
-      setTimeout(() => {
-        clearInterval(timer);
-        target.textContent = finalText;
-        target.classList.remove('slotting');
-        target.classList.add('slot-complete');
-        target.dataset.spun = 'true';
-        target.setAttribute('aria-label', finalText);
-      }, duration);
-    }
+function spinNameOnce(target, finalText) {
+  if (!target || target.dataset.spun === 'true') return;
+  const pool = ['Olivi~r', 'Oliver', 'Ol1ver', '0liver', 'O-L-I-V-E-R', 'Oliverr', 'O.G.', 'Oll—', 'Olive?', 'Oli..', 'Oliver'];
+  const duration = 1200;
+  const interval = 70;
+  let i = 0;
+  target.classList.add('slotting');
+  const timer = setInterval(() => {
+    target.textContent = pool[i++ % pool.length];
+  }, interval);
+  setTimeout(() => {
+    clearInterval(timer);
+    target.textContent = finalText;
+    target.classList.remove('slotting');
+    target.classList.add('slot-complete');
+    target.dataset.spun = 'true';
+    target.setAttribute('aria-label', finalText);
+  }, duration);
+}
 
-    window.addEventListener('DOMContentLoaded', () => {
-      const isGold = Math.floor(Math.random() * 50) === 0;
-      setGoldState(isGold);
+window.addEventListener('DOMContentLoaded', () => {
+  // --- GOLD STATE + OLIVER LOGIC ---
+  const isGold = Math.floor(Math.random() * 50) === 0;
+  setGoldState(isGold);
 
-      const oliver = document.getElementById('player-oliver');
-      oliver?.addEventListener('click', () => spinNameOnce(oliver, 'Ollie G'));
-      if (oliver) {
-        oliver.setAttribute('tabindex', '0');
-        oliver.setAttribute('role', 'button');
-        oliver.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            spinNameOnce(oliver, 'Ollie G');
-          }
-        });
+  const oliver = document.getElementById('player-oliver');
+  oliver?.addEventListener('click', () => spinNameOnce(oliver, 'Ollie G'));
+  if (oliver) {
+    oliver.setAttribute('tabindex', '0');
+    oliver.setAttribute('role', 'button');
+    oliver.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        spinNameOnce(oliver, 'Ollie G');
       }
     });
-   
- // --- Password panel logic ---
-window.addEventListener('DOMContentLoaded', () => {
-  const btn = document.getElementById('password-btn');
-  const panel = document.getElementById('password-panel');
-  const closeBtn = document.getElementById('close-panel');
-  const submit = document.getElementById('password-submit');
-  const input = document.getElementById('password-input');
-  const msg = document.getElementById('password-message');
-
-  if (!btn || !panel) return;
-
-  btn.addEventListener('click', () => {
-    panel.style.display = 'flex';
-    input.focus();
-  });
-
-  panel.addEventListener('click', (e) => {
-    if (e.target === panel) panel.style.display = 'none';
-  });
-
-  closeBtn.addEventListener('click', () => {
-    panel.style.display = 'none';
-  });
-
-  submit.addEventListener('click', () => {
-    const entered = input.value.trim();
-    if (entered === '902197') {
-      msg.textContent = '✅ Access granted!';
-      msg.style.color = 'lime';
-      launchConfetti();
-      setTimeout(() => panel.style.display = 'none', 2000);
-    } else {
-      msg.textContent = '❌ Incorrect password.';
-      msg.style.color = 'red';
-    }
-  });
-
-function launchConfetti() {
-    // Simple confetti animation using canvas
-    const confettiCanvas = document.createElement('canvas');
-    confettiCanvas.style.position = 'fixed';
-    confettiCanvas.style.top = 0;
-    confettiCanvas.style.left = 0;
-    confettiCanvas.style.width = '100%';
-    confettiCanvas.style.height = '100%';
-    confettiCanvas.style.pointerEvents = 'none';
-    confettiCanvas.style.zIndex = 2000;
-    document.body.appendChild(confettiCanvas);
-    const ctx = confettiCanvas.getContext('2d');
-
-    const confetti = Array.from({ length: 150 }).map(() => ({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * -50,
-      r: Math.random() * 6 + 2,
-      d: Math.random() * 0.5 + 0.5,
-      color: `hsl(${Math.random() * 360}, 100%, 60%)`,
-      tilt: Math.random() * 10 - 5
-    }));
-
-    function draw() {
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-      confetti.forEach(p => {
-        ctx.beginPath();
-        ctx.fillStyle = p.color;
-        ctx.fillRect(p.x, p.y, p.r, p.r);
-      });
-      update();
-    }
-
-    function update() {
-      confetti.forEach(p => {
-        p.y += p.d * 4;
-        p.x += Math.sin(p.tilt / 2);
-        p.tilt += 0.5;
-      });
-    }
-
-    let frame = 0;
-    function animate() {
-      draw();
-      frame++;
-      if (frame < 200) requestAnimationFrame(animate);
-      else document.body.removeChild(confettiCanvas);
-    }
-    animate();
   }
-});
-    // --- Leaderboard Submission Logic ---
-window.addEventListener('DOMContentLoaded', () => {
-  const openSubmit = document.getElementById('open-submit-panel');
-  const submitPanel = document.getElementById('submit-panel');
-  const closeSubmit = document.getElementById('close-submit');
-  const submitBtn = document.getElementById('submit-score');
-  const nameInput = document.getElementById('player-name');
-  const scoreInput = document.getElementById('player-score');
-  const msg = document.getElementById('submit-message');
+
+  // --- PASSWORD PANEL LOGIC ---
+  const btn = el('password-btn');
+  const panel = el('password-panel');
+  const closeBtn = el('close-panel');
+  const submit = el('password-submit');
+  const input = el('password-input');
+  const msg = el('password-message');
+
+  if (btn && panel) {
+    btn.addEventListener('click', () => {
+      panel.style.display = 'flex';
+      input.focus();
+    });
+
+    closeBtn.addEventListener('click', () => {
+      panel.style.display = 'none';
+    });
+
+    panel.addEventListener('click', (e) => {
+      if (e.target === panel) panel.style.display = 'none';
+    });
+
+    submit.addEventListener('click', () => {
+      const entered = input.value.trim();
+      if (entered === '902197') {
+        msg.textContent = '✅ Access granted!';
+        msg.style.color = 'lime';
+        setTimeout(() => {
+          panel.style.display = 'none';
+          const newPage = window.open('about:blank', '_blank');
+          if (newPage) {
+            newPage.document.write(`
+              <html>
+                <head>
+                  <title>The Icon Loves All</title>
+                  <style>
+                    body {
+                      background: black;
+                      color: white;
+                      font-family: 'Poppins', sans-serif;
+                      text-align: center;
+                      padding-top: 100px;
+                      font-size: 2rem;
+                      letter-spacing: 2px;
+                    }
+                  </style>
+                </head>
+                <body>THE ICON LOVES ALL</body>
+              </html>
+            `);
+            newPage.document.close();
+          }
+        }, 800);
+      } else {
+        msg.textContent = '❌ Incorrect password.';
+        msg.style.color = 'red';
+      }
+    });
+  }
+
+  // --- LEADERBOARD SUBMIT SCORE LOGIC ---
+  const openSubmit = el('open-submit-panel');
+  const submitPanel = el('submit-panel');
+  const closeSubmit = el('close-submit');
+  const submitBtn = el('submit-score');
+  const nameInput = el('player-name');
+  const scoreInput = el('player-score');
+  const msg2 = el('submit-message');
   const tableBody = document.querySelector('table tbody');
 
-  if (!openSubmit || !tableBody) return;
-
-  openSubmit.addEventListener('click', () => {
-    submitPanel.style.display = 'flex';
-    msg.textContent = '';
-    nameInput.value = '';
-    scoreInput.value = '';
-    nameInput.focus();
-  });
-
-  closeSubmit.addEventListener('click', () => {
-    submitPanel.style.display = 'none';
-  });
-
-  submitBtn.addEventListener('click', () => {
-    const name = nameInput.value.trim();
-    const score = parseInt(scoreInput.value.trim());
-
-    if (!name || isNaN(score) || score <= 0) {
-      msg.textContent = '⚠️ Enter a valid name and score.';
-      msg.style.color = 'orange';
-      return;
-    }
-
-    // Add new row
-    const row = document.createElement('tr');
-    row.innerHTML = `<td class="rank"></td><td>${name}</td><td class="score">${score.toLocaleString()}</td>`;
-    tableBody.appendChild(row);
-
-    // Sort leaderboard
-    const rows = Array.from(tableBody.querySelectorAll('tr'));
-    rows.sort((a, b) => {
-      const aScore = parseInt(a.querySelector('.score').textContent.replace(/,/g, ''));
-      const bScore = parseInt(b.querySelector('.score').textContent.replace(/,/g, ''));
-      return bScore - aScore;
+  if (openSubmit && submitPanel && tableBody) {
+    openSubmit.addEventListener('click', () => {
+      submitPanel.style.display = 'flex';
+      msg2.textContent = '';
+      nameInput.value = '';
+      scoreInput.value = '';
+      nameInput.focus();
     });
 
-    // Re-render sorted rows + rank numbers
-    tableBody.innerHTML = '';
-    rows.forEach((r, i) => {
-      r.querySelector('.rank').textContent = i + 1;
-      tableBody.appendChild(r);
+    closeSubmit.addEventListener('click', () => {
+      submitPanel.style.display = 'none';
     });
 
-    msg.textContent = '✅ Score added!';
-    msg.style.color = 'lime';
-    setTimeout(() => { submitPanel.style.display = 'none'; }, 1000);
-  });
-  </script>
+    submitBtn.addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      const score = parseInt(scoreInput.value.trim());
+
+      if (!name || isNaN(score) || score <= 0) {
+        msg2.textContent = '⚠️ Enter a valid name and score.';
+        msg2.style.color = 'orange';
+        return;
+      }
+
+      const row = document.createElement('tr');
+      row.innerHTML = `<td class="rank"></td><td>${name}</td><td class="score">${score.toLocaleString()}</td>`;
+      tableBody.appendChild(row);
+
+      // Sort leaderboard
+      const rows = Array.from(tableBody.querySelectorAll('tr'));
+      rows.sort((a, b) => {
+        const aScore = parseInt(a.querySelector('.score').textContent.replace(/,/g, ''));
+        const bScore = parseInt(b.querySelector('.score').textContent.replace(/,/g, ''));
+        return bScore - aScore;
+      });
+
+      // Re-render
+      tableBody.innerHTML = '';
+      rows.forEach((r, i) => {
+        r.querySelector('.rank').textContent = i + 1;
+        tableBody.appendChild(r);
+      });
+
+      msg2.textContent = '✅ Score added!';
+      msg2.style.color = 'lime';
+      setTimeout(() => (submitPanel.style.display = 'none'), 1000);
+    });
+  }
+});
+</script>
 
   <!-- Floating Password Button -->
 <button id="password-btn" aria-label="Open password panel">🔒</button>
