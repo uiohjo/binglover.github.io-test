@@ -326,6 +326,12 @@
           </table>
         </div>
       </aside>
+      <!-- Add New Score Button -->
+<div style="text-align:center; margin-top:16px;">
+  <button id="open-submit-panel" style="background:var(--gold-1); color:#000; border:none; border-radius:8px; padding:8px 14px; cursor:pointer;">
+    ➕ Submit Score
+  </button>
+</div>
     </main>
 
     <footer>
@@ -478,6 +484,65 @@ function launchConfetti() {
     animate();
   }
 });
+    // --- Leaderboard Submission Logic ---
+window.addEventListener('DOMContentLoaded', () => {
+  const openSubmit = document.getElementById('open-submit-panel');
+  const submitPanel = document.getElementById('submit-panel');
+  const closeSubmit = document.getElementById('close-submit');
+  const submitBtn = document.getElementById('submit-score');
+  const nameInput = document.getElementById('player-name');
+  const scoreInput = document.getElementById('player-score');
+  const msg = document.getElementById('submit-message');
+  const tableBody = document.querySelector('table tbody');
+
+  if (!openSubmit || !tableBody) return;
+
+  openSubmit.addEventListener('click', () => {
+    submitPanel.style.display = 'flex';
+    msg.textContent = '';
+    nameInput.value = '';
+    scoreInput.value = '';
+    nameInput.focus();
+  });
+
+  closeSubmit.addEventListener('click', () => {
+    submitPanel.style.display = 'none';
+  });
+
+  submitBtn.addEventListener('click', () => {
+    const name = nameInput.value.trim();
+    const score = parseInt(scoreInput.value.trim());
+
+    if (!name || isNaN(score) || score <= 0) {
+      msg.textContent = '⚠️ Enter a valid name and score.';
+      msg.style.color = 'orange';
+      return;
+    }
+
+    // Add new row
+    const row = document.createElement('tr');
+    row.innerHTML = `<td class="rank"></td><td>${name}</td><td class="score">${score.toLocaleString()}</td>`;
+    tableBody.appendChild(row);
+
+    // Sort leaderboard
+    const rows = Array.from(tableBody.querySelectorAll('tr'));
+    rows.sort((a, b) => {
+      const aScore = parseInt(a.querySelector('.score').textContent.replace(/,/g, ''));
+      const bScore = parseInt(b.querySelector('.score').textContent.replace(/,/g, ''));
+      return bScore - aScore;
+    });
+
+    // Re-render sorted rows + rank numbers
+    tableBody.innerHTML = '';
+    rows.forEach((r, i) => {
+      r.querySelector('.rank').textContent = i + 1;
+      tableBody.appendChild(r);
+    });
+
+    msg.textContent = '✅ Score added!';
+    msg.style.color = 'lime';
+    setTimeout(() => { submitPanel.style.display = 'none'; }, 1000);
+  });
   </script>
 
   <!-- Floating Password Button -->
@@ -490,6 +555,18 @@ function launchConfetti() {
     <input type="password" id="password-input" placeholder="6-digit code" maxlength="6" />
     <button id="password-submit">Submit</button>
     <p id="password-message"></p>
+  </div>
+</div>
+ 
+  <!-- Submit Score Panel -->
+<div id="submit-panel" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); align-items:center; justify-content:center; z-index:999;">
+  <div style="background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:24px; text-align:center; box-shadow:var(--shadow-lg); width:300px;">
+    <button id="close-submit" style="position:absolute; top:8px; right:12px; background:none; border:none; color:var(--muted); font-size:1.2rem; cursor:pointer;">✖</button>
+    <h3>Submit Your Score</h3>
+    <input type="text" id="player-name" placeholder="Your name" style="width:80%; padding:8px; margin-top:10px; border-radius:8px; border:1px solid var(--border); background:rgba(255,255,255,0.1); color:var(--text); text-align:center;" />
+    <input type="number" id="player-score" placeholder="Score" style="width:80%; padding:8px; margin-top:10px; border-radius:8px; border:1px solid var(--border); background:rgba(255,255,255,0.1); color:var(--text); text-align:center;" />
+    <button id="submit-score" style="margin-top:12px; background:var(--gold-1); color:#000; border:none; border-radius:8px; padding:8px 14px; cursor:pointer;">Submit</button>
+    <p id="submit-message" style="margin-top:10px; color:var(--muted);"></p>
   </div>
 </div>
   
