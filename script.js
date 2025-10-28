@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<script>
 'use strict';
 
 const el = (id) => document.getElementById(id);
@@ -119,4 +117,3 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-</script>
