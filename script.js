@@ -163,7 +163,7 @@ window.addEventListener('DOMContentLoaded', () => {
           panel.style.display = 'none';
 
           // ✅ OPEN THE WEBSITE IN A NEW TAB
-          window.open("https://binglover.github.io/", "_blank");
+          window.open("about:blank", "_blank");
 
         }, 500);
 
