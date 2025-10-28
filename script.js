@@ -246,25 +246,48 @@ window.addEventListener('DOMContentLoaded', () => {
       if (e.target === panel) panel.style.display = 'none';
     });
 
-    submit.addEventListener('click', () => {
-      const entered = input.value.trim();
-      if (entered === '902197') {
-        msg.textContent = '✅ Access granted!';
-        msg.style.color = 'lime';
+submit.addEventListener('click', () => {
+  const entered = input.value.trim();
 
-        setTimeout(() => {
-          panel.style.display = 'none';
+  if (entered === '902197') {
+    msg.textContent = '✅ Access granted!';
+    msg.style.color = 'lime';
 
-          // ✅ OPEN THE WEBSITE IN A NEW TAB
-          window.open("about:blank", "_blank");
+    setTimeout(() => {
+      panel.style.display = 'none';
 
-        }, 500);
+      const newTab = window.open("about:blank", "_blank");
 
-      } else {
-        msg.textContent = '❌ Incorrect password.';
-        msg.style.color = 'red';
+      if (newTab) {
+        newTab.document.write(`
+          <html>
+            <head>
+              <title>Secret Access</title>
+              <style>
+                body, html {
+                  margin: 0;
+                  padding: 0;
+                  overflow: hidden;
+                }
+                iframe {
+                  width: 100vw;
+                  height: 100vh;
+                  border: none;
+                }
+              </style>
+            </head>
+            <body>
+              <iframe src="https://binglover.github.io/"></iframe>
+            </body>
+          </html>
+        `);
+        newTab.document.close();
       }
-    });
+    }, 600);
+
+  } else {
+    msg.textContent = '❌ Incorrect password.';
+    msg.style.color = 'red';
   }
 });
 </script>
