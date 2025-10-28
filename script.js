@@ -26,7 +26,7 @@ function spinNameOnce(target, finalText) {
   let i = 0;
 
   target.classList.add('slotting');
-  target.dataset.spun = 'true'; // prevent double triggering
+  target.dataset.spun = 'true'; // prevent triggering twice
 
   const timer = setInterval(() => {
     target.textContent = pool[i++ % pool.length];
@@ -47,6 +47,7 @@ function spinNameOnce(target, finalText) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+
   // --- GOLD TITLE + OLIVER SPIN LOGIC ---
   const isGold = Math.floor(Math.random() * 50) === 0;
   setGoldState(isGold);
@@ -72,20 +73,13 @@ window.addEventListener('DOMContentLoaded', () => {
   const input = el('password-input');
   const msg = el('password-message');
 
+  // Hide password button until Ollie G event
+  if (btn) btn.style.display = "none";
+
   if (btn && panel) {
     btn.addEventListener('click', () => {
       panel.style.display = 'flex';
       input.focus();
-      
-      // --- LEADERBOARD NAVIGATION ---
-const leaderboardBtn = el("goto-leaderboard");
-if (leaderboardBtn) {
-  leaderboardBtn.addEventListener("click", () => {
-    const section = el("leaderboard-section");
-    section.scrollIntoView({ behavior: "smooth" });
-  });
-}
-
     });
 
     closeBtn.addEventListener('click', () => panel.style.display = 'none');
@@ -132,6 +126,17 @@ if (leaderboardBtn) {
       } else {
         msg.textContent = '❌ Incorrect password.';
         msg.style.color = 'red';
+      }
+    });
+  }
+
+  // --- LEADERBOARD NAVIGATION ---
+  const leaderboardBtn = el("goto-leaderboard");
+  if (leaderboardBtn) {
+    leaderboardBtn.addEventListener("click", () => {
+      const section = el("leaderboard-section");
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
       }
     });
   }
