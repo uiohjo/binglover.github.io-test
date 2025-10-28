@@ -395,8 +395,6 @@ window.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         spinNameOnce(oliver, 'Ollie G');
       }
-    });
-  }
 
   // --- PASSWORD PANEL LOGIC ---
   const btn = el('password-btn');
@@ -455,8 +453,6 @@ window.addEventListener('DOMContentLoaded', () => {
         msg.textContent = '❌ Incorrect password.';
         msg.style.color = 'red';
       }
-    });
-  }
 
   // --- LEADERBOARD SUBMIT SCORE LOGIC ---
   const openSubmit = el('open-submit-panel');
@@ -514,8 +510,7 @@ window.addEventListener('DOMContentLoaded', () => {
       msg2.style.color = 'lime';
       setTimeout(() => (submitPanel.style.display = 'none'), 1000);
     });
-  }
-});
+    
 </script>
 
   <!-- Floating Password Button -->
