@@ -83,40 +83,32 @@ window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
           panel.style.display = 'none';
 
-          // ✅ OPEN about:blank AND LOAD WEBSITE INSIDE FULLSCREEN IFRAME
-          const newPage = window.open("about:blank", "_blank");
-          if (newPage) {
-            newPage.document.write(`
-              <!DOCTYPE html>
-              <html>
-              <head>
-                <title>Secret View</title>
-                <style>
-                  body, html {
-                    margin: 0;
-                    padding: 0;
-                    overflow: hidden;
-                  }
-                  iframe {
-                    border: none;
-                    width: 100vw;
-                    height: 100vh;
-                  }
-                </style>
-              </head>
-              <body>
-                <iframe src="http://binglover.github.io/"></iframe>
-              </body>
-              </html>
-            `);
-            newPage.document.close();
-          }
-        }, 500);
+// ✅ OPEN about:blank AND LOAD YOUR HTML FILE INSIDE
+const newPage = window.open("about:blank", "_blank");
+if (newPage) {
+  newPage.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Secret View</title>
+      <style>
+        body, html {
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+        }
+        iframe {
+          border: none;
+          width: 100vw;
+          height: 100vh;
+        }
+      </style>
+    </head>
+    <body>
+      <iframe src="cl1v1maybeidk.html"></iframe>
+    </body>
+    </html>
+  `);
+  newPage.document.close();
+}
 
-      } else {
-        msg.textContent = '❌ Incorrect password.';
-        msg.style.color = 'red';
-      }
-    });
-  }
-});
