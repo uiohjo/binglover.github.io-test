@@ -20,7 +20,7 @@ function setGoldState(isGold) {
 function spinNameOnce(target, finalText) {
   if (!target || target.dataset.spun === 'true') return;
 
-  const pool = ['Olivi~r', 'Oliver', 'Ol1ver', '0liver', 'O-L-I-V-E-R', 'Oliverr', 'O.G.', 'Oll—', 'Olive?', 'Oli..', 'Oliver'];
+  const pool = ['Olivi~r', 'Oliver', 'Ol1ver', 'Olivia', '0liver', 'O-L-I-V-E-R', 'Asian', 'O.G.', 'Oll—', 'Olive?', 'Oli..', 'Oliver Oil'];
   const duration = 1200;
   const interval = 70;
   let i = 0;
