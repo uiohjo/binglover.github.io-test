@@ -1,4 +1,3 @@
-
 'use strict';
 
 const el = (id) => document.getElementById(id);
@@ -20,21 +19,30 @@ function setGoldState(isGold) {
 
 function spinNameOnce(target, finalText) {
   if (!target || target.dataset.spun === 'true') return;
+
   const pool = ['Olivi~r', 'Oliver', 'Ol1ver', '0liver', 'O-L-I-V-E-R', 'Oliverr', 'O.G.', 'Oll—', 'Olive?', 'Oli..', 'Oliver'];
   const duration = 1200;
   const interval = 70;
   let i = 0;
+
   target.classList.add('slotting');
+  target.dataset.spun = 'true'; // prevent double triggering
+
   const timer = setInterval(() => {
     target.textContent = pool[i++ % pool.length];
   }, interval);
+
   setTimeout(() => {
     clearInterval(timer);
     target.textContent = finalText;
     target.classList.remove('slotting');
     target.classList.add('slot-complete');
-    target.dataset.spun = 'true';
     target.setAttribute('aria-label', finalText);
+
+    // ✅ UNHIDE PASSWORD BUTTON
+    const btn = el('password-btn');
+    if (btn) btn.style.display = 'block';
+
   }, duration);
 }
 
