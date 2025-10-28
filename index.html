@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +13,86 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+
+  <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="site">
+    <header role="banner">
+      <h1 id="title" class="title" aria-live="polite">Plumet Tournament</h1>
+      <p class="subtle">Aim for the highest score! Compete fairly, flex responsibly.</p>
+      <p id="rarity" class="rarity" role="status" aria-live="assertive">You rolled the GOLD variant. Nice.</p>
+    </header>
+
+    <main role="main">
+      <section class="card">
+        <div class="card__header">
+          <h2 class="card__title">Play</h2>
+        </div>
+        <div class="card__body">
+          <div class="game-frame" id="game-frame" aria-label="Plumet Game Container">
+            <object id="game-object" data="Plumet2.swf" type="application/x-shockwave-flash">
+              <param name="movie" value="Plumet2.swf" />
+              <param name="allowFullScreen" value="true" />
+              <param name="allowScriptAccess" value="always" />
+              <embed src="Plumet2.swf" type="application/x-shockwave-flash"></embed>
+            </object>
+            <noscript>
+              <p>JavaScript is required to run the Flash emulator. Please enable JavaScript.</p>
+            </noscript>
+          </div>
+        </div>
+      </section>
+
+      <aside class="card" aria-labelledby="lb-title">
+        <div class="card__header">
+          <h2 id="lb-title" class="card__title">Leaderboard</h2>
+        </div>
+        <div class="card__body">
+          <table role="table" aria-describedby="lb-caption">
+            <thead>
+              <tr>
+                <th class="rank">#</th>
+                <th>Player</th>
+                <th class="score">Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="rank">1</td><td>Jared Aarre</td><td class="score">1,904</td></tr>
+              <tr><td class="rank">2</td><td>Luke Loiselle</td><td class="score">1,901</td></tr>
+              <tr><td class="rank">3</td><td id="player-oliver" style="cursor:pointer" title="Try your luck!">Oliver Grogg</td><td class="score">1,769</td></tr>
+              <tr><td class="rank">4</td><td>Ethan Roisland</td><td class="score">1,717</td></tr>
+              <tr><td class="rank">5</td><td>Nick Gillard</td><td class="score">1,707</td></tr>
+              <tr><td class="rank">6</td><td>Uilses Rumbo Banos</td><td class="score">1,248</td></tr>
+              <tr><td class="rank">7</td><td>Max Marson</td><td class="score">1,231</td></tr>
+              <tr><td class="rank">8</td><td>Adrian Trjuillo</td><td class="score">983</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      Plumet Tournament · Hosted by Luke
+    </footer>
+  </div>
+
+  <!-- Floating Password Button -->
+<button id="password-btn" aria-label="Open password panel">🔒</button>
+
+<div id="password-panel">
+  <div class="panel-content">
+    <button id="close-panel" aria-label="Close panel">✖</button>
+    <h3>Enter Password</h3>
+    <input type="password" id="password-input" placeholder="6-digit code" maxlength="6" />
+    <button id="password-submit">Submit</button>
+    <p id="password-message"></p>
+  </div>
+</div>
   
 </body>
 </html>
+
