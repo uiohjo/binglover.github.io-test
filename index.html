@@ -428,7 +428,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-function launchConfetti() {
+  function launchConfetti() {
     // Simple confetti animation using canvas
     const confettiCanvas = document.createElement('canvas');
     confettiCanvas.style.position = 'fixed';
@@ -440,9 +440,20 @@ function launchConfetti() {
     confettiCanvas.style.zIndex = 2000;
     document.body.appendChild(confettiCanvas);
     const ctx = confettiCanvas.getContext('2d');
+    if (!ctx) {
+      document.body.removeChild(confettiCanvas);
+      return;
+    }
+
+    const setCanvasSize = () => {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    };
+    setCanvasSize();
+    window.addEventListener('resize', setCanvasSize);
 
     const confetti = Array.from({ length: 150 }).map(() => ({
-      x: Math.random() * window.innerWidth,
+      x: Math.random() * confettiCanvas.width,
       y: Math.random() * -50,
       r: Math.random() * 6 + 2,
       d: Math.random() * 0.5 + 0.5,
@@ -451,7 +462,7 @@ function launchConfetti() {
     }));
 
     function draw() {
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
       confetti.forEach(p => {
         ctx.beginPath();
         ctx.fillStyle = p.color;
@@ -465,6 +476,10 @@ function launchConfetti() {
         p.y += p.d * 4;
         p.x += Math.sin(p.tilt / 2);
         p.tilt += 0.5;
+        if (p.y > confettiCanvas.height) {
+          p.y = -10;
+          p.x = Math.random() * confettiCanvas.width;
+        }
       });
     }
 
@@ -472,8 +487,12 @@ function launchConfetti() {
     function animate() {
       draw();
       frame++;
-      if (frame < 200) requestAnimationFrame(animate);
-      else document.body.removeChild(confettiCanvas);
+      if (frame < 200) {
+        requestAnimationFrame(animate);
+      } else {
+        window.removeEventListener('resize', setCanvasSize);
+        document.body.removeChild(confettiCanvas);
+      }
     }
     animate();
   }
