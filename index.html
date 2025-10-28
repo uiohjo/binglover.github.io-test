@@ -431,17 +431,56 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-// ✅ OPEN NEW ABOUT:BLANK TAB SHOWING THE WEBSITE
-setTimeout(() => {
-  panel.style.display = 'none';
+function launchConfetti() {
+    // Simple confetti animation using canvas
+    const confettiCanvas = document.createElement('canvas');
+    confettiCanvas.style.position = 'fixed';
+    confettiCanvas.style.top = 0;
+    confettiCanvas.style.left = 0;
+    confettiCanvas.style.width = '100%';
+    confettiCanvas.style.height = '100%';
+    confettiCanvas.style.pointerEvents = 'none';
+    confettiCanvas.style.zIndex = 2000;
+    document.body.appendChild(confettiCanvas);
+    const ctx = confettiCanvas.getContext('2d');
 
-  const newPage = window.open("about:blank", "_blank");
-  newPage.document.write(`
-    <iframe src="${location.href}" frameborder="0" style="width:100vw; height:100vh;"></iframe>
-  `);
-  newPage.document.close();
-  800);
-  
+    const confetti = Array.from({ length: 150 }).map(() => ({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * -50,
+      r: Math.random() * 6 + 2,
+      d: Math.random() * 0.5 + 0.5,
+      color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+      tilt: Math.random() * 10 - 5
+    }));
+
+    function draw() {
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      confetti.forEach(p => {
+        ctx.beginPath();
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, p.r, p.r);
+      });
+      update();
+    }
+
+    function update() {
+      confetti.forEach(p => {
+        p.y += p.d * 4;
+        p.x += Math.sin(p.tilt / 2);
+        p.tilt += 0.5;
+      });
+    }
+
+    let frame = 0;
+    function animate() {
+      draw();
+      frame++;
+      if (frame < 200) requestAnimationFrame(animate);
+      else document.body.removeChild(confettiCanvas);
+    }
+    animate();
+  }
+});
   </script>
 
   <!-- Floating Password Button -->
