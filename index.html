@@ -322,9 +322,6 @@
               <tr><td class="rank">3</td><td id="player-oliver" style="cursor:pointer" title="Try your luck!">Oliver Grogg</td><td class="score">1,769</td></tr>
               <tr><td class="rank">4</td><td>Ethan Roisland</td><td class="score">1,717</td></tr>
               <tr><td class="rank">5</td><td>Nick Gillard</td><td class="score">1,707</td></tr>
-              <tr><td class="rank">6</td><td>Junior</td><td class="score">1,248</td></tr>
-              <tr><td class="rank">7</td><td>Max Marson</td><td class="score">1,231</td></tr>
-              <tr><td class="rank">8</td><td>Adrian Trujillo</td><td class="score">893</td></tr>
             </tbody>
           </table>
         </div>
@@ -375,7 +372,25 @@
         target.setAttribute('aria-label', finalText);
       }, duration);
     }
-    
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const isGold = Math.floor(Math.random() * 50) === 0;
+      setGoldState(isGold);
+
+      const oliver = document.getElementById('player-oliver');
+      oliver?.addEventListener('click', () => spinNameOnce(oliver, 'Ollie G'));
+      if (oliver) {
+        oliver.setAttribute('tabindex', '0');
+        oliver.setAttribute('role', 'button');
+        oliver.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            spinNameOnce(oliver, 'Ollie G');
+          }
+        });
+      }
+    });
+   
  // --- Password panel logic ---
 window.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('password-btn');
