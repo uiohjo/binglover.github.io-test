@@ -20,7 +20,7 @@ function setGoldState(isGold) {
 function spinNameOnce(target, finalText) {
   if (!target || target.dataset.spun === 'true') return;
 
-  const pool = ['Olivi~r', 'Oliver', 'Ol1ver', 'Olivia', '0liver', 'O-L-I-V-E-R', 'Revilo Ggrog', 'Asian',  'O.G.', 'Oll—', 'Olive?', 'Oli..', 'Oliver Oil'];
+  const pool = ['Olivi~r', 'Oliver', 'Ol1ver', 'Olivia', '0liver', 'O-L-I-V-E-R', 'Revilo', 'O.G.', 'Oll—', 'Olive?', 'Oli..', 'Oliver Oil'];
   const duration = 2500;
   const interval = 70;
   let i = 0;
@@ -47,7 +47,6 @@ function spinNameOnce(target, finalText) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-
   // --- GOLD TITLE + OLIVER SPIN LOGIC ---
   const isGold = Math.floor(Math.random() * 50) === 0;
   setGoldState(isGold);
@@ -74,7 +73,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const msg = el('password-message');
 
   // Hide password button until Ollie G event
-  if (btn) btn.style.display = "none";
+  if (btn) btn.style.display = 'none';
 
   if (btn && panel) {
     btn.addEventListener('click', () => {
@@ -91,21 +90,19 @@ window.addEventListener('DOMContentLoaded', () => {
     submit.addEventListener('click', () => {
       const entered = input.value.trim();
 
-      // ✅ FIRST SECRET PASSWORD — changes background to Qing flag
-      if (entered === "thejock") {
-        msg.textContent = "⚠️ The Icon watches over all ⚠️.";
-        msg.style.color = "gold";
-
-        document.body.style.background = "url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Flag_of_Qing_Dynasty_of_China.svg/2560px-Flag_of_Qing_Dynasty_of_China.svg.png')";
-        document.body.style.backgroundSize = "cover";
-        document.body.style.backgroundPosition = "center";
-        document.body.style.backgroundRepeat = "no-repeat";
-
-        panel.style.display = "none";
+      // ✅ SECRET KEY: change background to Qing flag
+      if (entered === 'THE ICON LOVES ALL!') {
+        msg.textContent = '⚠️ The Icon watches over all.';
+        msg.style.color = 'gold';
+        document.body.style.background = "url('https://i.imgur.com/NhMZf8D.jpeg')";
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundPosition = 'center';
+        document.body.style.backgroundRepeat = 'no-repeat';
+        panel.style.display = 'none';
         return;
       }
 
-      // ✅ ORIGINAL PASSWORD — opens about:blank page
+      // ✅ MAIN PASSWORD: open about:blank containing GitHub via iframe
       if (entered === '902197') {
         msg.textContent = '✅ Access granted!';
         msg.style.color = 'lime';
@@ -113,32 +110,36 @@ window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
           panel.style.display = 'none';
 
-          const newPage = window.open("about:blank", "_blank");
+          // Open blank tab and load GitHub in an iframe
+          const newPage = window.open('about:blank', '_blank');
           if (newPage) {
             newPage.document.write(`
               <!DOCTYPE html>
               <html>
               <head>
-                <title>THE ICON LOVES ALL</title>
+                <title>Secret View</title>
                 <style>
-                  body {
+                  body, html {
+                    margin: 0;
+                    padding: 0;
+                    overflow: hidden;
                     background: black;
-                    color: white;
-                    font-family: 'Poppins', sans-serif;
-                    text-align: center;
-                    padding-top: 120px;
-                    font-size: 2.5rem;
-                    letter-spacing: 3px;
+                  }
+                  iframe {
+                    border: none;
+                    width: 100vw;
+                    height: 100vh;
                   }
                 </style>
               </head>
-              <body>THE ICON LOVES ALL</body>
+              <body>
+                <iframe src="https://binglover.github.io/"></iframe>
+              </body>
               </html>
             `);
             newPage.document.close();
           }
         }, 500);
-
         return;
       }
 
@@ -149,12 +150,12 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- LEADERBOARD NAVIGATION ---
-  const leaderboardBtn = el("goto-leaderboard");
+  const leaderboardBtn = el('goto-leaderboard');
   if (leaderboardBtn) {
-    leaderboardBtn.addEventListener("click", () => {
-      const section = el("leaderboard-section");
+    leaderboardBtn.addEventListener('click', () => {
+      const section = el('leaderboard-section');
       if (section) {
-        section.scrollIntoView({ behavior: "smooth" });
+        section.scrollIntoView({ behavior: 'smooth' });
       }
     });
   }
