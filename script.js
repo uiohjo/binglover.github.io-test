@@ -93,7 +93,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
       // ✅ FIRST SECRET PASSWORD — changes background to Qing flag
       if (entered === "thejock") {
-        msg.textContent = "⚠️ The Icon watches over all.";
+        msg.textContent = "⚠️ The Icon watches over all ⚠️.";
         msg.style.color = "gold";
 
         document.body.style.background = "url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Flag_of_Qing_Dynasty_of_China.svg/2560px-Flag_of_Qing_Dynasty_of_China.svg.png')";
