@@ -88,47 +88,65 @@ window.addEventListener('DOMContentLoaded', () => {
       if (e.target === panel) panel.style.display = 'none';
     });
 
-    submit.addEventListener('click', () => {
-      const entered = input.value.trim();
-      if (entered === '902197') {
-        msg.textContent = '✅ Access granted!';
-        msg.style.color = 'lime';
+submit.addEventListener('click', () => {
+  const entered = input.value.trim();
 
-        setTimeout(() => {
-          panel.style.display = 'none';
+  // ✅ Special phrase: change background to Qing Dynasty flag
+  if (entered === "THE ICON LOVES ALL!") {
+    msg.textContent = "⚠️ Background unlocked.";
+    msg.style.color = "gold";
 
-          const newPage = window.open("about:blank", "_blank");
-          if (newPage) {
-            newPage.document.write(`
-              <!DOCTYPE html>
-              <html>
-              <head>
-                <title>THE ICON LOVES ALL</title>
-                <style>
-                  body {
-                    background: black;
-                    color: white;
-                    font-family: 'Poppins', sans-serif;
-                    text-align: center;
-                    padding-top: 120px;
-                    font-size: 2.5rem;
-                    letter-spacing: 3px;
-                  }
-                </style>
-              </head>
-              <body>THE ICON LOVES ALL</body>
-              </html>
-            `);
-            newPage.document.close();
-          }
-        }, 500);
+    document.body.style.background = "url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Flag_of_Qing_Dynasty_of_China.svg/2560px-Flag_of_Qing_Dynasty_of_China.svg.png')";
+    document.body.style.backgroundSize = "cover";
+    document.body.style.backgroundPosition = "center";
+    document.body.style.backgroundRepeat = "no-repeat";
 
-      } else {
-        msg.textContent = '❌ Incorrect password.';
-        msg.style.color = 'red';
-      }
-    });
+    panel.style.display = "none";
+    return; // ⛔ stops function here so it doesn't check other passwords
   }
+
+  // ✅ Password triggers about:blank page
+  if (entered === '902197') {
+    msg.textContent = '✅ Access granted!';
+    msg.style.color = 'lime';
+
+    setTimeout(() => {
+      panel.style.display = 'none';
+
+      const newPage = window.open("about:blank", "_blank");
+      if (newPage) {
+        newPage.document.write(`
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>THE ICON LOVES ALL</title>
+            <style>
+              body {
+                background: black;
+                color: white;
+                font-family: 'Poppins', sans-serif;
+                text-align: center;
+                padding-top: 120px;
+                font-size: 2.5rem;
+                letter-spacing: 3px;
+              }
+            </style>
+          </head>
+          <body>THE ICON LOVES ALL</body>
+          </html>
+        `);
+        newPage.document.close();
+      }
+    }, 500);
+
+    return;
+  }
+
+  // ❌ Wrong input
+  msg.textContent = '❌ Incorrect password.';
+  msg.style.color = 'red';
+});
+
 
   // --- LEADERBOARD NAVIGATION ---
   const leaderboardBtn = el("goto-leaderboard");
