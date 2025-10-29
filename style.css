@@ -23,7 +23,15 @@ body {
 }
 
 body {
+  body {
+
   transition: background 1.5s ease-in-out;
+  
+  background-image: url("https://i.imgur.com/NhMZf8D.jpeg");
+  background-size: cover;        /* ✅ makes it fill the whole screen */
+  background-repeat: no-repeat;  /* ✅ avoid tiling */
+  background-position: center;   /* ✅ keeps it centered */
+  background-attachment: fixed;  /* ✅ keeps it fixed when scrolling (optional) */
 }
 
 body {
