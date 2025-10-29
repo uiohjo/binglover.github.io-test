@@ -26,7 +26,13 @@
       <p class="subtle">Aim for the highest score! Compete fairly, flex responsibly.</p>
       <p id="rarity" class="rarity" role="status" aria-live="assertive">You rolled the GOLD variant. Nice.</p>
       <div style="margin-top: 15px;">
-       
+      
+        <button id="goto-cookie"
+  style="background: var(--gold-1); color: #000; border: none; border-radius: 8px; padding: 8px 14px; cursor: pointer; font-weight: 600;"
+  onclick="window.location.href='cookieclicker/index.html'">
+  🍪 Play Cookie Clicker
+</button>
+
         <button id="goto-files"
   style="background: var(--gold-1); color: #000; border: none; border-radius: 8px; padding: 8px 14px; cursor: pointer; font-weight: 600;"
   onclick="fetch('clSINGLEFILE.html').then(r => r.text()).then(t => { 
