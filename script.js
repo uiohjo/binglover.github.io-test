@@ -92,7 +92,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const entered = input.value.trim();
 
       // ✅ FIRST SECRET PASSWORD — changes background to Qing flag
-      if (entered === "THE ICON LOVES ALL!") {
+      if (entered === "thejock") {
         msg.textContent = "⚠️ The Icon watches over all.";
         msg.style.color = "gold";
 
