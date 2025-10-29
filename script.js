@@ -90,20 +90,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 submit.addEventListener('click', () => {
   const entered = input.value.trim();
-
-  // ✅ Special phrase: change background to Qing Dynasty flag
-  if (entered === "THE ICON LOVES ALL!") {
-    msg.textContent = "⚠️ Background unlocked.";
-    msg.style.color = "gold";
-
-    document.body.style.background = "url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Flag_of_Qing_Dynasty_of_China.svg/2560px-Flag_of_Qing_Dynasty_of_China.svg.png')";
-    document.body.style.backgroundSize = "cover";
-    document.body.style.backgroundPosition = "center";
-    document.body.style.backgroundRepeat = "no-repeat";
-
-    panel.style.display = "none";
-    return; // ⛔ stops function here so it doesn't check other passwords
-  }
+  
 
   // ✅ Password triggers about:blank page
   if (entered === '902197') {
