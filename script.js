@@ -91,7 +91,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const entered = input.value.trim();
 
       // ✅ SECRET KEY: change background to Qing flag
-      if (entered === 'THE ICON LOVES ALL!') {
+      if (entered === 'thejock') {
         msg.textContent = '⚠️ The Icon watches over all.';
         msg.style.color = 'gold';
         document.body.style.background = "url('https://i.imgur.com/NhMZf8D.jpeg')";
