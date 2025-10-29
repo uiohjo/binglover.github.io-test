@@ -117,7 +117,7 @@ window.addEventListener('DOMContentLoaded', () => {
               <!DOCTYPE html>
               <html>
               <head>
-                <title>Secret View</title>
+                <title>TESTING TESTING</title>
                 <style>
                   body, html {
                     margin: 0;
