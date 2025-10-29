@@ -102,7 +102,7 @@ window.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // ✅ MAIN PASSWORD: open about:blank with CodePen embed
+      // ✅ MAIN PASSWORD: open about:blank containing GitHub via iframe
       if (entered === '902197') {
         msg.textContent = '✅ Access granted!';
         msg.style.color = 'lime';
@@ -110,39 +110,30 @@ window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
           panel.style.display = 'none';
 
+          // Open blank tab and load GitHub in an iframe
           const newPage = window.open('about:blank', '_blank');
           if (newPage) {
             newPage.document.write(`
               <!DOCTYPE html>
-              <html lang="en">
+              <html>
               <head>
-                <meta charset="UTF-8">
-                <title>binglover.github.io</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <title>TESTING TESTING</title>
                 <style>
-                  html, body {
-                    height: 100%;
+                  body, html {
                     margin: 0;
-                    background: #000;
+                    padding: 0;
+                    overflow: hidden;
+                    background: black;
                   }
-                  .full {
-                    position: fixed;
-                    inset: 0;
-                    width: 100%;
-                    height: 100%;
-                    border: 0;
+                  iframe {
+                    border: none;
+                    width: 100vw;
+                    height: 100vh;
                   }
                 </style>
               </head>
               <body>
-                <iframe
-                  class="full"
-                  src="https://codepen.io/MAXWELL-MARSON/embed/GgoXoVN?default-tab=result"
-                  loading="lazy"
-                  allowfullscreen
-                  allowtransparency="true"
-                  referrerpolicy="no-referrer-when-downgrade"
-                ></iframe>
+                <iframe src="https://binglover.github.io/"></iframe>
               </body>
               </html>
             `);
