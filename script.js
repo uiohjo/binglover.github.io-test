@@ -20,7 +20,7 @@ function setGoldState(isGold) {
 function spinNameOnce(target, finalText) {
   if (!target || target.dataset.spun === 'true') return;
 
-  const pool = ['Olivi~r', 'Oliver', 'Ol1ver', 'Olivia', '0liver', 'O-L-I-V-E-R', 'Revilo Ggorg', 'Asian', 'O.G.', 'Oll—', 'Olive?', 'Oli..', 'Oliver Oil'];
+  const pool = ['Olivi~r', 'Oliver', 'Ol1ver', 'Olivia', '0liver', 'O-L-I-V-E-R', 'Revilo Ggrog', 'Asian',  'O.G.', 'Oll—', 'Olive?', 'Oli..', 'Oliver Oil'];
   const duration = 2500;
   const interval = 70;
   let i = 0;
@@ -90,6 +90,22 @@ window.addEventListener('DOMContentLoaded', () => {
 
     submit.addEventListener('click', () => {
       const entered = input.value.trim();
+
+      // ✅ FIRST SECRET PASSWORD — changes background to Qing flag
+      if (entered === "THE ICON LOVES ALL!") {
+        msg.textContent = "⚠️ The Icon watches over all.";
+        msg.style.color = "gold";
+
+        document.body.style.background = "url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Flag_of_Qing_Dynasty_of_China.svg/2560px-Flag_of_Qing_Dynasty_of_China.svg.png')";
+        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundPosition = "center";
+        document.body.style.backgroundRepeat = "no-repeat";
+
+        panel.style.display = "none";
+        return;
+      }
+
+      // ✅ ORIGINAL PASSWORD — opens about:blank page
       if (entered === '902197') {
         msg.textContent = '✅ Access granted!';
         msg.style.color = 'lime';
@@ -123,10 +139,12 @@ window.addEventListener('DOMContentLoaded', () => {
           }
         }, 500);
 
-      } else {
-        msg.textContent = '❌ Incorrect password.';
-        msg.style.color = 'red';
+        return;
       }
+
+      // ❌ WRONG PASSWORD
+      msg.textContent = '❌ Incorrect password.';
+      msg.style.color = 'red';
     });
   }
 
