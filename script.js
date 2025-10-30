@@ -117,7 +117,7 @@ window.addEventListener('DOMContentLoaded', () => {
               <!DOCTYPE html>
               <html>
               <head>
-                <title>TESTING TESTING</title>
+                <title>Blocked Page</title>
                 <style>
                   body, html {
                     margin: 0;
@@ -133,7 +133,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 </style>
               </head>
               <body>
-                <iframe src="https://binglover.github.io/"></iframe>
+              <iframe src="https://orteil.dashnet.org/cookieclicker/beta/" width="100%" height="800"></iframe>
               </body>
               </html>
             `);
