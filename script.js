@@ -2,6 +2,30 @@
 
 const el = (id) => document.getElementById(id);
 
+async function getAccessToken() {
+  const exp = +localStorage.getItem("sp_expires_at") || 0;
+  if (Date.now() < exp) return localStorage.getItem("sp_access_token");
+
+  const refresh = localStorage.getItem("sp_refresh_token");
+  if (!refresh) return null; // user may need to reconnect after 1h if no refresh token granted
+
+  const body = new URLSearchParams({
+    grant_type: "refresh_token",
+    refresh_token: refresh,
+    client_id: "YOUR_SPOTIFY_CLIENT_ID"
+  });
+
+  const r = await fetch("https://accounts.spotify.com/api/token", {
+    method:"POST", headers:{ "Content-Type":"application/x-www-form-urlencoded" }, body
+  });
+
+  if (!r.ok) return null;
+  const tok = await r.json();
+  localStorage.setItem("sp_access_token", tok.access_token);
+  localStorage.setItem("sp_expires_at", String(Date.now() + (tok.expires_in-60)*1000));
+  return tok.access_token;
+}
+
 const CLIENT_ID = "YOUR_SPOTIFY_CLIENT_ID";
 const REDIRECT_URI = location.origin + location.pathname.replace(/\/$/, "") + "/callback"; 
 const SCOPES = ["user-read-currently-playing","user-read-playback-state"].join(" ");
