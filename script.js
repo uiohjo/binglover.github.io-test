@@ -85,7 +85,7 @@ setInterval(poll, 2500);
 
 // --- PKCE setup ---
 const CLIENT_ID = "f5792dc487ef45d2a16dc2e21dbf427e";
-const REDIRECT_URI = location.origin + location.pathname.replace(/\/$/, "") + "/callback";
+const REDIRECT_URI = "https://uiohjo.github.io/binglover.github.io-test/callback/"; // exact match, trailing slash
 const SCOPES = ["user-read-currently-playing", "user-read-playback-state"].join(" ");
 
 const connectBtn = document.getElementById("spotify-connect");
@@ -95,10 +95,13 @@ connectBtn?.addEventListener("click", async () => {
   const challenge = await pkceChallenge(verifier);
   sessionStorage.setItem("pkce_verifier", verifier);
 
+  // Save the exact redirect URI so the callback uses the same one
+  sessionStorage.setItem("sp_redirect_uri", REDIRECT_URI);
+
   const authUrl = new URL("https://accounts.spotify.com/authorize");
   authUrl.searchParams.set("response_type", "code");
   authUrl.searchParams.set("client_id", CLIENT_ID);
-  authUrl.searchParams.set("redirect_uri", REDIRECT_URI);
+  authUrl.searchParams.set("redirect_uri", REDIRECT_URI); // MUST match dashboard
   authUrl.searchParams.set("scope", SCOPES);
   authUrl.searchParams.set("code_challenge_method", "S256");
   authUrl.searchParams.set("code_challenge", challenge);
