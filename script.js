@@ -1,13 +1,18 @@
 'use strict';
 
 const el = (id) => document.getElementById(id);
-const toast = document.getElementById("toast");
-const titleEl = document.getElementById("toast-title");
-const subEl   = document.getElementById("toast-sub");
-const imgEl   = document.getElementById("toast-img");
+
+const toast   = el("toast");
+const titleEl = el("toast-title");
+const subEl   = el("toast-sub");
+const imgEl   = el("toast-img");
+const controls = el("toast-controls");
+const hotspot  = el("toast-hotspot");
 
 let lastTrackId = null;
+let lastToastData = null;
 let timer;
+let hideAfterHoverTimer = null;
 
 // --- token refresher ---
 async function getAccessToken() {
@@ -64,11 +69,14 @@ async function poll() {
 }
 
 function showToast({ title, artists, art }) {
+  lastToastData = { title, artists, art }; // remember for hover recall
+
   titleEl.textContent = title;
   subEl.textContent = artists;
   imgEl.src = art;
   toast.style.display = "flex";
   toast.style.opacity = 0;
+  controls.style.display = "none"; // hidden during auto pop-up
   toast.animate(
     [{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "translateY(0)" }],
     { duration: 180, fill: "forwards" }
@@ -81,21 +89,102 @@ function showToast({ title, artists, art }) {
   }, 5000);
 }
 
+function forceShowToast(data) {
+  if (!data) return;
+  titleEl.textContent = data.title;
+  subEl.textContent = data.artists;
+  imgEl.src = data.art || "";
+  toast.style.display = "flex";
+  toast.style.opacity = 0;
+  toast.animate(
+    [{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "translateY(0)" }],
+    { duration: 150, fill: "forwards" }
+  );
+  controls.style.display = "flex";
+}
+
+// Hover hotspot behaviour
+if (hotspot) {
+  hotspot.addEventListener("mouseenter", () => {
+    if (lastToastData) forceShowToast(lastToastData);
+  });
+}
+
+if (toast) {
+  toast.addEventListener("mouseenter", () => {
+    clearTimeout(hideAfterHoverTimer);
+    controls.style.display = "flex";
+  });
+  toast.addEventListener("mouseleave", () => {
+    hideAfterHoverTimer = setTimeout(() => {
+      controls.style.display = "none";
+      toast.style.display = "none";
+    }, 600);
+  });
+}
+
 setInterval(poll, 2500);
+
+// --- Playback control helpers ---
+async function spotifyControl(endpoint, method = "POST", query = "") {
+  const token = await getAccessToken();
+  if (!token) return false;
+  const url = `https://api.spotify.com/v1/me/player/${endpoint}${query}`;
+  const r = await fetch(url, {
+    method,
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    }
+  });
+  // Silently ignore errors (403/404 happen with no active device or non-premium)
+  return r.ok;
+}
+
+async function restartTrack() {
+  return spotifyControl("seek", "PUT", "?position_ms=0");
+}
+
+async function togglePlayPause() {
+  const token = await getAccessToken();
+  if (!token) return false;
+  const stateRes = await fetch("https://api.spotify.com/v1/me/player", {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!stateRes.ok) return false;
+  const data = await stateRes.json();
+  if (data && data.is_playing) {
+    return spotifyControl("pause", "PUT");
+  } else {
+    return spotifyControl("play", "PUT");
+  }
+}
+
+async function nextTrack() {
+  return spotifyControl("next", "POST");
+}
+
+el("btn-restart")   ?.addEventListener("click", restartTrack);
+el("btn-playpause") ?.addEventListener("click", togglePlayPause);
+el("btn-next")      ?.addEventListener("click", nextTrack);
 
 // --- PKCE setup ---
 const CLIENT_ID = "f5792dc487ef45d2a16dc2e21dbf427e";
 const REDIRECT_URI = "https://uiohjo.github.io/binglover.github.io-test/callback/"; // exact match, trailing slash
-const SCOPES = ["user-read-currently-playing", "user-read-playback-state"].join(" ");
+const SCOPES = [
+  "user-read-currently-playing",
+  "user-read-playback-state",
+  "user-modify-playback-state" // needed for pause/seek/next
+].join(" ");
 
-const connectBtn = document.getElementById("spotify-connect");
+const connectBtn = el("spotify-connect");
 
 connectBtn?.addEventListener("click", async () => {
   const verifier = base64url(crypto.getRandomValues(new Uint8Array(64)));
   const challenge = await pkceChallenge(verifier);
   sessionStorage.setItem("pkce_verifier", verifier);
 
-  // Save the exact redirect URI so the callback uses the same one
+  // Save exact redirect so callback uses the same one
   sessionStorage.setItem("sp_redirect_uri", REDIRECT_URI);
 
   const authUrl = new URL("https://accounts.spotify.com/authorize");
@@ -120,6 +209,7 @@ async function pkceChallenge(verifier) {
   const digest = await crypto.subtle.digest("SHA-256", data);
   return base64url(new Uint8Array(digest));
 }
+
 
 function setGoldState(isGold) {
   const title = el('title');
