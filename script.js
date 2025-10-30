@@ -64,14 +64,11 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-document.getElementById("open-blank").addEventListener("click", () => {
-  const gameFrame = document.getElementById("game-frame"); // whatever div contains your game
-  const rect = gameFrame.getBoundingClientRect(); // reads width + height
-
+  document.getElementById("open-blank").addEventListener("click", () => {
   const newPage = window.open("about:blank", "_blank");
 
   if (!newPage) {
-    alert("Popup blocked! Allow popups.");
+    alert("Popup blocked! Allow popups for this site.");
     return;
   }
 
@@ -79,20 +76,18 @@ document.getElementById("open-blank").addEventListener("click", () => {
     <!DOCTYPE html>
     <html>
       <head>
-        <title>Running in about:blank</title>
+        <title>Classroom</title>
         <style>
-          html, body {
+          body, html {
             margin: 0;
             padding: 0;
-            background: black;
             overflow: hidden;
+            background: black;
           }
           iframe {
-            width: ${rect.width}px;
-            height: ${rect.height}px;
+            width: 100vw;
+            height: 100vh;
             border: none;
-            display: block;
-            margin: 0 auto;
           }
         </style>
       </head>
@@ -151,47 +146,38 @@ document.getElementById("open-blank").addEventListener("click", () => {
         setTimeout(() => {
           panel.style.display = 'none';
 
-          
-document.getElementById("open-blank").addEventListener("click", () => {
-  const gameFrame = document.getElementById("game-frame"); // whatever div contains your game
-  const rect = gameFrame.getBoundingClientRect(); // reads width + height
-
-  const newPage = window.open("about:blank", "_blank");
-
-  if (!newPage) {
-    alert("Popup blocked! Allow popups.");
-    return;
-  }
-
-  newPage.document.write(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>Running in about:blank</title>
-        <style>
-          html, body {
-            margin: 0;
-            padding: 0;
-            background: black;
-            overflow: hidden;
+          // Open blank tab and load GitHub in an iframe
+          const newPage = window.open('about:blank', '_blank');
+          if (newPage) {
+            newPage.document.write(`
+              <!DOCTYPE html>
+              <html>
+              <head>
+                <title>Blocked Page</title>
+                <style>
+                  body, html {
+                    margin: 0;
+                    padding: 0;
+                    overflow: hidden;
+                    background: black;
+                  }
+                  iframe {
+                    border: none;
+                    width: 100vw;
+                    height: 100vh;
+                  }
+                </style>
+              </head>
+              <body>
+              <iframe src="https://binglover.github.io"></iframe>
+              </body>
+              </html>
+            `);
+            newPage.document.close();
           }
-          iframe {
-            width: ${rect.width}px;
-            height: ${rect.height}px;
-            border: none;
-            display: block;
-            margin: 0 auto;
-          }
-        </style>
-      </head>
-      <body>
-        <iframe src="https://binglover.github.io/"></iframe>
-      </body>
-    </html>
-  `);
-
-  newPage.document.close();
-});
+        }, 500);
+        return;
+      }
 
       // ❌ WRONG PASSWORD
       msg.textContent = '❌ Incorrect password.';
