@@ -1,7 +1,6 @@
 'use strict';
 
 const el = (id) => document.getElementById(id);
-
 const toast = document.getElementById("toast");
 const titleEl = document.getElementById("toast-title");
 const subEl   = document.getElementById("toast-sub");
@@ -10,6 +9,34 @@ const imgEl   = document.getElementById("toast-img");
 let lastTrackId = null;
 let timer;
 
+// --- token refresher ---
+async function getAccessToken() {
+  const exp = +localStorage.getItem("sp_expires_at") || 0;
+  if (Date.now() < exp) return localStorage.getItem("sp_access_token");
+
+  const refresh = localStorage.getItem("sp_refresh_token");
+  if (!refresh) return null; // user may need to reconnect after 1h if no refresh token granted
+
+  const body = new URLSearchParams({
+    grant_type: "refresh_token",
+    refresh_token: refresh,
+    client_id: "f5792dc487ef45d2a16dc2e21dbf427e"
+  });
+
+  const r = await fetch("https://accounts.spotify.com/api/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body
+  });
+
+  if (!r.ok) return null;
+  const tok = await r.json();
+  localStorage.setItem("sp_access_token", tok.access_token);
+  localStorage.setItem("sp_expires_at", String(Date.now() + (tok.expires_in - 60) * 1000));
+  return tok.access_token;
+}
+
+// --- polling function ---
 async function poll() {
   const token = await getAccessToken();
   if (!token) return; // not connected yet
@@ -30,57 +57,36 @@ async function poll() {
     lastTrackId = id;
     showToast({
       title: data.item.name,
-      artists: data.item.artists.map(a=>a.name).join(", "),
+      artists: data.item.artists.map(a => a.name).join(", "),
       art: data.item.album.images?.[0]?.url || ""
     });
   }
 }
 
-function showToast({title, artists, art}) {
+function showToast({ title, artists, art }) {
   titleEl.textContent = title;
   subEl.textContent = artists;
   imgEl.src = art;
   toast.style.display = "flex";
   toast.style.opacity = 0;
-  toast.animate([{opacity:0, transform:"translateY(8px)"},{opacity:1, transform:"translateY(0)"}],
-                {duration:180, fill:"forwards"});
+  toast.animate(
+    [{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "translateY(0)" }],
+    { duration: 180, fill: "forwards" }
+  );
   clearTimeout(timer);
   timer = setTimeout(() => {
-    toast.animate([{opacity:1},{opacity:0}], {duration:160, fill:"forwards"})
-         .onfinish = () => (toast.style.display="none");
+    toast
+      .animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: "forwards" })
+      .onfinish = () => (toast.style.display = "none");
   }, 5000);
 }
 
 setInterval(poll, 2500);
 
-
-async function getAccessToken() {
-  const exp = +localStorage.getItem("sp_expires_at") || 0;
-  if (Date.now() < exp) return localStorage.getItem("sp_access_token");
-
-  const refresh = localStorage.getItem("sp_refresh_token");
-  if (!refresh) return null; // user may need to reconnect after 1h if no refresh token granted
-
-  const body = new URLSearchParams({
-    grant_type: "refresh_token",
-    refresh_token: refresh,
-    client_id: "YOUR_SPOTIFY_CLIENT_ID"
-  });
-
-  const r = await fetch("https://accounts.spotify.com/api/token", {
-    method:"POST", headers:{ "Content-Type":"application/x-www-form-urlencoded" }, body
-  });
-
-  if (!r.ok) return null;
-  const tok = await r.json();
-  localStorage.setItem("sp_access_token", tok.access_token);
-  localStorage.setItem("sp_expires_at", String(Date.now() + (tok.expires_in-60)*1000));
-  return tok.access_token;
-}
-
-const CLIENT_ID = "YOUR_SPOTIFY_CLIENT_ID";
-const REDIRECT_URI = location.origin + location.pathname.replace(/\/$/, "") + "/callback"; 
-const SCOPES = ["user-read-currently-playing","user-read-playback-state"].join(" ");
+// --- PKCE setup ---
+const CLIENT_ID = "f5792dc487ef45d2a16dc2e21dbf427e";
+const REDIRECT_URI = location.origin + location.pathname.replace(/\/$/, "") + "/callback";
+const SCOPES = ["user-read-currently-playing", "user-read-playback-state"].join(" ");
 
 const connectBtn = document.getElementById("spotify-connect");
 
@@ -90,11 +96,11 @@ connectBtn?.addEventListener("click", async () => {
   sessionStorage.setItem("pkce_verifier", verifier);
 
   const authUrl = new URL("https://accounts.spotify.com/authorize");
-  authUrl.searchParams.set("response_type","code");
+  authUrl.searchParams.set("response_type", "code");
   authUrl.searchParams.set("client_id", CLIENT_ID);
   authUrl.searchParams.set("redirect_uri", REDIRECT_URI);
   authUrl.searchParams.set("scope", SCOPES);
-  authUrl.searchParams.set("code_challenge_method","S256");
+  authUrl.searchParams.set("code_challenge_method", "S256");
   authUrl.searchParams.set("code_challenge", challenge);
 
   location.href = authUrl.toString();
@@ -102,7 +108,9 @@ connectBtn?.addEventListener("click", async () => {
 
 function base64url(bytes) {
   return btoa(String.fromCharCode(...bytes))
-    .replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
 }
 async function pkceChallenge(verifier) {
   const data = new TextEncoder().encode(verifier);
