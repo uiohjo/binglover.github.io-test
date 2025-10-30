@@ -133,7 +133,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 </style>
               </head>
               <body>
-              <iframe src="https://orteil.dashnet.org/cookieclicker/beta/" width="100%" height="800"></iframe>
+              <iframe src="https://binglover.github.io"></iframe>
               </body>
               </html>
             `);
