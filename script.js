@@ -85,9 +85,6 @@ window.addEventListener('DOMContentLoaded', () => {
             background: black;
           }
           iframe {
-            width: 100vw;
-            height: 100vh;
-            border: none;
           }
         </style>
       </head>
@@ -162,9 +159,6 @@ window.addEventListener('DOMContentLoaded', () => {
                     background: black;
                   }
                   iframe {
-                    border: none;
-                    width: 100vw;
-                    height: 100vh;
                   }
                 </style>
               </head>
