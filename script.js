@@ -94,7 +94,7 @@ window.addEventListener('DOMContentLoaded', () => {
       if (entered === 'thejock') {
         msg.textContent = '⚠️ The Icon watches over all.';
         msg.style.color = 'gold';
-        document.body.style.background = "url('https://i.imgur.com/NhMZf8D.jpeg')";
+        document.body.style.background = "url('https://i.imgur.com/CgplZ0i.png')";
         document.body.style.backgroundSize = 'cover';
         document.body.style.backgroundPosition = 'center';
         document.body.style.backgroundRepeat = 'no-repeat';
