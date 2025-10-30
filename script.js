@@ -2,6 +2,38 @@
 
 const el = (id) => document.getElementById(id);
 
+const CLIENT_ID = "YOUR_SPOTIFY_CLIENT_ID";
+const REDIRECT_URI = location.origin + location.pathname.replace(/\/$/, "") + "/callback"; 
+const SCOPES = ["user-read-currently-playing","user-read-playback-state"].join(" ");
+
+const connectBtn = document.getElementById("spotify-connect");
+
+connectBtn?.addEventListener("click", async () => {
+  const verifier = base64url(crypto.getRandomValues(new Uint8Array(64)));
+  const challenge = await pkceChallenge(verifier);
+  sessionStorage.setItem("pkce_verifier", verifier);
+
+  const authUrl = new URL("https://accounts.spotify.com/authorize");
+  authUrl.searchParams.set("response_type","code");
+  authUrl.searchParams.set("client_id", CLIENT_ID);
+  authUrl.searchParams.set("redirect_uri", REDIRECT_URI);
+  authUrl.searchParams.set("scope", SCOPES);
+  authUrl.searchParams.set("code_challenge_method","S256");
+  authUrl.searchParams.set("code_challenge", challenge);
+
+  location.href = authUrl.toString();
+});
+
+function base64url(bytes) {
+  return btoa(String.fromCharCode(...bytes))
+    .replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+async function pkceChallenge(verifier) {
+  const data = new TextEncoder().encode(verifier);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  return base64url(new Uint8Array(digest));
+}
+
 function setGoldState(isGold) {
   const title = el('title');
   const rarity = el('rarity');
