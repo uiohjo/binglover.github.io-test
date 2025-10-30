@@ -2,6 +2,58 @@
 
 const el = (id) => document.getElementById(id);
 
+const toast = document.getElementById("toast");
+const titleEl = document.getElementById("toast-title");
+const subEl   = document.getElementById("toast-sub");
+const imgEl   = document.getElementById("toast-img");
+
+let lastTrackId = null;
+let timer;
+
+async function poll() {
+  const token = await getAccessToken();
+  if (!token) return; // not connected yet
+
+  const r = await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  if (r.status === 204) return; // nothing playing
+  if (!r.ok) return;            // rate-limit? shrug and retry later
+
+  const data = await r.json();
+  if (!data?.item || !data.is_playing) return;
+
+  const id = data.item.id;
+  const isStart = id !== lastTrackId && (data.progress_ms ?? 0) < 2500;
+  if (isStart) {
+    lastTrackId = id;
+    showToast({
+      title: data.item.name,
+      artists: data.item.artists.map(a=>a.name).join(", "),
+      art: data.item.album.images?.[0]?.url || ""
+    });
+  }
+}
+
+function showToast({title, artists, art}) {
+  titleEl.textContent = title;
+  subEl.textContent = artists;
+  imgEl.src = art;
+  toast.style.display = "flex";
+  toast.style.opacity = 0;
+  toast.animate([{opacity:0, transform:"translateY(8px)"},{opacity:1, transform:"translateY(0)"}],
+                {duration:180, fill:"forwards"});
+  clearTimeout(timer);
+  timer = setTimeout(() => {
+    toast.animate([{opacity:1},{opacity:0}], {duration:160, fill:"forwards"})
+         .onfinish = () => (toast.style.display="none");
+  }, 5000);
+}
+
+setInterval(poll, 2500);
+
+
 async function getAccessToken() {
   const exp = +localStorage.getItem("sp_expires_at") || 0;
   if (Date.now() < exp) return localStorage.getItem("sp_access_token");
