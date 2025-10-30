@@ -64,6 +64,42 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  document.getElementById("open-blank").addEventListener("click", () => {
+  const newPage = window.open("about:blank", "_blank");
+
+  if (!newPage) {
+    alert("Popup blocked! Allow popups for this site.");
+    return;
+  }
+
+  newPage.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Classroom</title>
+        <style>
+          body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: black;
+          }
+          iframe {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+          }
+        </style>
+      </head>
+      <body>
+        <iframe src="https://binglover.github.io/"></iframe>
+      </body>
+    </html>
+  `);
+
+  newPage.document.close();
+});
+
   // --- PASSWORD PANEL LOGIC ---
   const btn = el('password-btn');
   const panel = el('password-panel');
